@@ -80,7 +80,7 @@ if __name__ == "__main__":
     # Main configuration
     parser.add_argument("--input-audio", type=str, default=None,
                         help="Path to the audio sample used for cluster validation")
-    parser.add_argument("--no-cluster-validation", type=bool, default=False,
+    parser.add_argument("--no-cluster-validation", type=bool, default=False, required=True,
                         help="Disenable cluster validation")
     parser.add_argument("--output-dir", type=str, default=f"{PLUGIN_PRESETS_DIR}",
                         help="Directory to store generated plugin presets")
@@ -246,33 +246,34 @@ if __name__ == "__main__":
     # random_sampling = args.random_sampling
     cpu = args.cpu_cores
     
-    # Load sample input audio
-    try:
-        audio_input, sample_rate = sf.read(audio_input_path, always_2d=True)
-    except FileNotFoundError:
-        print(f"Audio input file not found: {audio_input_path}")
-        raise
-    audio_input = audio_input.T
+    if not args.no_cluster_validation:
+        # Load sample input audio
+        try:
+            audio_input, sample_rate = sf.read(audio_input_path, always_2d=True)
+        except FileNotFoundError:
+            print(f"Audio input file not found: {audio_input_path}")
+            raise
+        audio_input = audio_input.T
     
-    # Set up device (GPU if available)
-    use_cuda = torch.cuda.is_available()
-    device = torch.device("cuda" if use_cuda else "cpu")    
-    print(f"Using device: {device}")
-    batch_size = args.batch_size
-    print(f"Using effective batch size: {batch_size}")
-    
-    # Create MFCC transform once (reuse for efficiency)
-    mfcc_transform = T.MFCC(
-        sample_rate=sample_rate,
-        n_mfcc=20,  # Number of MFCC coefficients (adjust as needed)
-        melkwargs={"n_fft": 2048, "n_mels": 128, "hop_length": 512}
-    ).to(device)
+        # Set up device (GPU if available)
+        use_cuda = torch.cuda.is_available()
+        device = torch.device("cuda" if use_cuda else "cpu")    
+        print(f"Using device: {device}")
+        batch_size = args.batch_size
+        print(f"Using effective batch size: {batch_size}")
+        
+        # Create MFCC transform once (reuse for efficiency)
+        mfcc_transform = T.MFCC(
+            sample_rate=sample_rate,
+            n_mfcc=20,  # Number of MFCC coefficients (adjust as needed)
+            melkwargs={"n_fft": 2048, "n_mels": 128, "hop_length": 512}
+        ).to(device)
 
-    # Wrap model with DataParallel if multiple GPUs are available
-    num_gpus = torch.cuda.device_count()
-    if use_cuda and num_gpus > 1:
-        print(f"Using DataParallel across {num_gpus} GPUs for MFCC transform.")
-        mfcc_transform = nn.DataParallel(mfcc_transform, device_ids=list(range(num_gpus)))
+        # Wrap model with DataParallel if multiple GPUs are available
+        num_gpus = torch.cuda.device_count()
+        if use_cuda and num_gpus > 1:
+            print(f"Using DataParallel across {num_gpus} GPUs for MFCC transform.")
+            mfcc_transform = nn.DataParallel(mfcc_transform, device_ids=list(range(num_gpus)))
     
     # Connnect to current project (need to by empty)
     project = reapy.Project()
@@ -304,11 +305,12 @@ if __name__ == "__main__":
             print("Skipping this plugin.")
             continue # Skip to the next plugin
         
-        # make dual mono if necessary, vice versa
-        if audio_input.shape[0] == 1 and min(n_inputs, n_outputs) > 1: # for some plugins with sidechain functionality, n_inputs == 1 does not mean mono
-            audio_input = np.concatenate((audio_input, audio_input), axis=0)
-        if audio_input.shape[0] == 2 and min(n_inputs, n_outputs) == 1:
-            audio_input = audio_input[0:1, :]
+        if not args.no_cluster_validation:
+            # make dual mono if necessary, vice versa
+            if audio_input.shape[0] == 1 and min(n_inputs, n_outputs) > 1: # for some plugins with sidechain functionality, n_inputs == 1 does not mean mono
+                audio_input = np.concatenate((audio_input, audio_input), axis=0)
+            if audio_input.shape[0] == 2 and min(n_inputs, n_outputs) == 1:
+                audio_input = audio_input[0:1, :]
         
         # Determine number of generations based on *interested* valid params
         num_valid_params = sum(1 for _, values in valid_params.items() if values)
