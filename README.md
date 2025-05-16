@@ -49,12 +49,14 @@ customized: true
 }
 </code></pre>
 
-<p align="center"> <img src="pics/example.png" width="400" alt="Mixing Graph with the Provided Sample"> </p>
+<p align="center"> <img src="pics/example.png" width="600" alt="Mixing Graph with the Provided Sample"> </p>
 
 ## 1. Docker Container Configuration
+
 <div align="center">
-  <img src="pics/deploy.png" alt="WildFX Deployment">
+  <img src="pics/deploy.png" width="400" alt="WildFX Deployment">
 </div>
+
 ### 1.1. Set up host machine
 #### 1.1.a. [Install docker](https://docs.docker.com/engine/install/)
 
@@ -138,9 +140,11 @@ python utils/test_reapy.py
 <div align="center">
   <img src="pics/workflow.png" alt="WildFX Workflow">
 </div>
+WildFX Workflow
 <div align="center">
   <img src="pics/layer.png" alt="WildFX Batch Processing">
 </div>
+WildFX Batch Processing
 ### 4.1. Get your installed plugin list
 Sometimes after running this commands, you need to restart REAPER.
 ```
