@@ -1,0 +1,67 @@
+{
+	"name": "reaper-python",
+	"build": {
+	  "dockerfile": "Dockerfile",
+	  "context": ".",
+	  "args": {
+		"USER_UID": "1014",  // adjust this to your host's user ID
+		"USER_GID": "1015",  // adjust this to your host's user group ID
+		"AUDIO_GID": "29"  // adjust this to your host's audio group ID
+	  }
+	},
+	
+	// Add host device access, volumes, and environment variables
+	"runArgs": [
+		// Audio capabilities (through --device=/dev/snd and group-add=audio)
+		"--device=/dev/snd",
+		"--group-add=audio",
+		"--shm-size=64g",
+		"--privileged",
+		// --network=host flag removes network isolation between the container and host, causing the container to inherit:
+			// The host's network interfaces
+			// The host's port mapping
+			// The host's hostname (pando)
+		// removing it may cause issues with the container's network stack
+		"--cpuset-cpus=0-60",
+		// !!!!!!!!!!!!!!!IMPOARTANT!!!!!!!!!!!!!!: if you did not set up the NVIDIA container runtime Toolkit, you need to remove the following 2 lines
+		// "--gpus=all",
+		// "--runtime=nvidia",
+		"--memory=450g",
+		// Real-time audio processing (through the various --cap-add and --ulimit flags)
+		"--cap-add=SYS_NICE",
+		"--cap-add=IPC_LOCK",
+		"--ulimit=memlock=-1:-1",
+		"--ulimit=rtprio=99",
+		"--security-opt=seccomp=unconfined",
+		"--ipc=host"
+	],
+	
+	"mounts": [
+		"source=${localEnv:HOME}/.ssh,target=/home/u1/.ssh,type=bind,consistency=cached", //ssh config
+		"source=/graft2/datasets/isaac,target=/datasets2,type=bind,consistency=cached",
+		"source=/graft1/datasets/isaac,target=/datasets1,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.vst3,target=/home/u1/.vst3,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.vst,target=/home/u1/.vst,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.clap,target=/home/u1/.clap,type=bind,consistency=cached",
+		"source=${localEnv:HOME}/.lv2,target=/home/u1/.lv2,type=bind,consistency=cached"
+	],
+  
+	// "containerEnv": {
+	//   "JACK_NO_AUDIO_RESERVATION": "1",
+	// },
+  
+	// Makes VS Code use the u1 user created in Dockerfile
+	"remoteUser": "u1",
+	"containerUser": "u1",
+  
+	// Configure VS Code settings
+	"customizations": {
+	  "vscode": {
+		"extensions": [
+		  "ms-python.python"
+		]
+	  }
+	},
+
+	"postCreateCommand": "bash ${containerWorkspaceFolder}/.devcontainer/postCreateCommand.sh"
+  }

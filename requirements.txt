@@ -1,0 +1,9 @@
+numpy
+soundfile
+scikit-learn
+tqdm
+pyyaml
+torch
+torchaudio
+h5py
+networkx

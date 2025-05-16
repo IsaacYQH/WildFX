@@ -1,0 +1,4 @@
+*__pycache__*
+*peaks*
+.vscode
+utils/sample_for_gen_presets.wav

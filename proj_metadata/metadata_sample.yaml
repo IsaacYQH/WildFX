@@ -1,0 +1,70 @@
+# That's one project - Splitter with Sidechain Compressor Example
+- FxChains:
+  # Chain 0: Splitter chain that splits the input signal into three outputs: low, mid, and high frequencies
+  - FxChain:
+    - fx_name: "JS: 3-Band Splitter" # this one is a made-up name for the example
+      fx_type: "splitter"
+      preset_index: 0
+      # params:
+      # - 200  # Crossover frequency or balance parameter
+      # - 2000  # Crossover frequency or balance parameter
+      n_inputs: 2
+      n_outputs: 6
+      sidechain_input: null  # Splitter doesn't use sidechain
+    # prev_chains removed
+    next_chains: # Dictionary format: {target_chain_index: gain}; order matters for the splitter, the output are ranked from low frequency to high frequency
+      1: 1.0  # Send to Compressor chain with gain 1.0
+      2: 1.0  # Send to Sidechain source chain with gain 1.0
+      4: 1.0  # Send to EQ chain with gain 1.0
+
+  # Chain 1: Compressor that receives main signal with sidechain input from Chain 2
+  - FxChain:
+    - fx_name: "VST3: ZamCompX2 (Damien Zammit)"
+      fx_type: "compressor"
+      preset_index: 1
+      # params:
+      # - 0.7  # Threshold
+      # - 4.0  # Ratio
+      # - 0.1  # Attack
+      # - 0.3  # Release
+      n_inputs: 3  # Expects 1 sidechain input channel (pair)
+      n_outputs: 2  # Stereo output
+      sidechain_input: 2  # Uses FxChain at index 2 as the sidechain source
+    next_chains:
+      3: 1.0 # Send to final output chain
+
+  # Chain 2: Sidechain source processing chain
+  - FxChain:
+    - fx_name: "VST3: 3 Band EQ (DISTRHO)"
+      fx_type: "eq"
+      preset_index: 0
+      # params: gain for different bands
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null  # EQ doesn't use sidechain
+    next_chains:
+      3: 1.0 # Send to final output chain
+
+  # Chain 3: Sidechain source processing chain
+  - FxChain: []
+    next_chains: {} # This is the end node
+
+  # Chain 4: EQ chain; FxChains don't need to be in the topological order of the graph
+  - FxChain:
+    - fx_name: "VST3: 3 Band EQ (DISTRHO)"
+      fx_type: "eq"
+      preset_index: 1
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null  # Uses FxChain at index 2 as the sidechain source
+    next_chains:
+      3: 1.0 # Send to final output chain
+
+
+  # Project properties
+  input_audios:
+    - audio_path: /workspaces/ReproFX-Graph/utils/sample_for_gen_presets.wav
+      audio_type: stereo
+      input_FxChain: 0  # Feed into chain 0 (the splitter)
+  output_audio: null  # Use standard output structure
+  customized: true  # Run parameters check

@@ -1,0 +1,6647 @@
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 23
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.4
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 266
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.59
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01943/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1926
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.34
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 13
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.93
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 11
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1980
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.75
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02002/stems/S01.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02002/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1659
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.03
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1202
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.54
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01932/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.06
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1591
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.82
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01960/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1206
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1651
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.59
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1526
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.43
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 970
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.51
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01996/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01996/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 956
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.77
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 106
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.18
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 23
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 123
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.38
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01904/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01904/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 767
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 46
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 355
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.68
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 25
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 64
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.7
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.9
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02052/stems/S11.flac
+    audio_type: Bass
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02052/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 61
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 24
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      0: 0.83
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.79
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01903/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 241
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 7
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.72
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 221
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.44
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 41
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.59
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01893/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01893/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 123
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 0
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.1
+  - FxChain: []
+    next_chains:
+      3: 0.95
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 77
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.1
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02031/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02031/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1722
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.47
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 228
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.21
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 123
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 723
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.03
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01895/stems/S06.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01895/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 879
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      2: 1.15
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1968
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.93
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01962/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1470
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 96
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.8
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 254
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.94
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 7
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.99
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02054/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02054/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 21
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 21
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.07
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 241
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.64
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02048/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 53
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.87
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 150
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.39
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01995/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 12
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 28
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.59
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1905
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1100
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.7
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 96
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.48
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02023/stems/S01.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02023/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 52
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1320
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.05
+  - FxChain: []
+    next_chains:
+      0: 1.24
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01883/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 49
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 36
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 61
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 54
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.2
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 25
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 62
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.01
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01973/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 51
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 67
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 52
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.48
+  - FxChain: []
+    next_chains:
+      0: 1.08
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01905/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains:
+      3: 1.38
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 159
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 34
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.81
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1661
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1614
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.66
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01929/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01929/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 8
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.27
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 122
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 24
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1997
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.76
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 104
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.69
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01945/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01945/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.53
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 65
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.93
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02082/stems/S08.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 29
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 45
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 402
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.95
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 40
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.04
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02010/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1877
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1418
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.55
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.48
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02000/stems/S08.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1968
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      0: 0.87
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 4
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.53
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01927/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 41
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1760
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 332
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.63
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 205
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.97
+  - FxChain: []
+    next_chains:
+      1: 0.46
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02051/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02051/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 230
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.3
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 153
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.9
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01913/stems/S04.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 2035
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 140
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.6
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1647
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 25
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.55
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 52
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.75
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01931/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01931/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 2006
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.41
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 305
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 209
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.78
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01888/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 35
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.39
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.77
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01985/stems/S07.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 25
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 425
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.5
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1966
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 1.81
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02007/stems/S12.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 75
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 17
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 162
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.66
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 290
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1277
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.35
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02020/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 48
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 42
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      2: 0.91
+  - FxChain: []
+    next_chains:
+      0: 0.42
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02093/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 52
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1574
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.81
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 186
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1355
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.31
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01948/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 26
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.35
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 53
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1614
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 721
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 54
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.71
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01897/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 558
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.64
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 94
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 853
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 51
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.44
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01900/stems/S07.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.64
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 26
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.66
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02079/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1759
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 13
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.3
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 24
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.84
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02061/stems/S06.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.97
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 21
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.66
+  - FxChain: []
+    next_chains:
+      1: 0.5
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02086/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02086/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 9
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 45
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 153
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.12
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 411
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.91
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01889/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 18
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1287
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.74
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 4
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.68
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02070/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 365
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.73
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1171
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.17
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 198
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 5
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.75
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01935/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01935/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 438
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 258
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 129
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.56
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1469
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.47
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 759
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.81
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02018/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02018/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1326
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 435
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 35
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.21
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 879
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.37
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02032/stems/S10.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 69
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.44
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1402
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.01
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02056/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 589
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 6
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1310
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.49
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 2034
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.15
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01901/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1408
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1733
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.03
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1400
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.85
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02045/stems/S10.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 637
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 62
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.17
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 666
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1198
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.04
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01986/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 15
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.33
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 207
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 60
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.39
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01892/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 128
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 54
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 20
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.37
+  - FxChain: []
+    next_chains:
+      0: 0.5
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02036/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 58
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 76
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 144
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.69
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1558
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.35
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 104
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.83
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02050/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02050/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains:
+      2: 0.67
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 129
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 149
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 1
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.45
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 55
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.66
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01968/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01968/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.66
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 135
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 83
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 0.53
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01994/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 26
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.32
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 36
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.28
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 205
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.93
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02013/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02013/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 58
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.35
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 24
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 821
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.95
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 54
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.97
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02064/stems/S11.flac
+    audio_type: Bass
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02064/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 171
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.63
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1218
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.25
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01949/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 784
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.88
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 72
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.62
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 33
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.68
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01896/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01896/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 58
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 29
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.47
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1784
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.16
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 248
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.0
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02067/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02067/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 64
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 330
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 25
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.8
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 0
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.18
+  - FxChain: []
+    next_chains:
+      2: 1.39
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01975/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01975/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 146
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 42
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 223
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.74
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 119
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 92
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.55
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02053/stems/S07.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 38
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 2
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.84
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 23
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.61
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01934/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.22
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 48
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 1.61
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01976/stems/S09.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 60
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 105
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1035
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 138
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.27
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 561
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.81
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 255
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.09
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02049/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02049/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 2029
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 240
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 88
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.04
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1916
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.66
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01877/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1939
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 4
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.37
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 106
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.67
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01982/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1090
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.46
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 28
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 332
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.1
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02042/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 14
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 118
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 32
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.26
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 9
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.69
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01959/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains:
+      2: 1.07
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 14
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 55
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 486
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 2
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.78
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01950/stems/S06.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 89
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 59
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 152
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.15
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 19
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.38
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 21
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.27
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01974/stems/S07.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01974/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1826
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1186
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.12
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 23
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 18
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.33
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02083/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 109
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 40
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.8
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1266
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.26
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01977/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 14
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.81
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 395
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1121
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.27
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 205
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.54
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01920/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01920/stems/S10.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1454
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 69
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.36
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 28
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.29
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02008/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.4
+  - FxChain: []
+    next_chains:
+      3: 1.04
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 32
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.8
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01917/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01917/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1751
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 13
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 2005
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.1
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1773
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.51
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 232
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.9
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01952/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01952/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 223
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.99
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 38
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.86
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01887/stems/S09.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 61
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 81
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.67
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 865
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.54
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01937/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1327
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.29
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 37
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 0.69
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 29
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.84
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01940/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01940/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 46
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 118
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.31
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.94
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02088/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 82
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 861
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 75
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.3
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 930
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 48
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.81
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02081/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 15
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.55
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 98
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 83
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 97
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.05
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02098/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 35
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 114
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.27
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1358
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 167
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 24
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.81
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01882/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 19
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 963
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 807
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.28
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 174
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.19
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02014/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 58
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.25
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 60
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.13
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 2
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.3
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02047/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02047/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 42
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.45
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1613
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 1.12
+  - FxChain: []
+    next_chains:
+      2: 1.59
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02063/stems/S06.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02063/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1064
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1270
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.06
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 267
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.31
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01928/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains:
+      2: 0.31
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1592
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 19
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 246
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.13
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01955/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 52
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.18
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1370
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 43
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.74
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 9
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 93
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.66
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02069/stems/S11.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02069/stems/S09.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1630
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.23
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 23
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 582
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.12
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 48
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.67
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02092/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02092/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains:
+      3: 1.13
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 76
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.19
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 9
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      2: 0.79
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01967/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01967/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1485
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 34
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 43
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.64
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 218
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 12
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.32
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01998/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 7
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 40
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 24
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.69
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 60
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.9
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01880/stems/S12.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 52
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 441
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: 2
+    next_chains:
+      3: 1.43
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 373
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.9
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 3
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 58
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.77
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01989/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01989/stems/S04.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.63
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 27
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 55
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 195
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.65
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01978/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 67
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 22
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.5
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 207
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.23
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 78
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.2
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01936/stems/S15.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01936/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1808
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1298
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.38
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 90
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.12
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01987/stems/S06.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 10
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.12
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 9
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.23
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01965/stems/S06.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 173
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.2
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 14
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 151
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.27
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 0
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.41
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01884/stems/S07.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01884/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.04
+  - FxChain: []
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 0.6
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02062/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 911
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1517
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.15
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 2023
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 150
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.69
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02001/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 28
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 694
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 111
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.89
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 89
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.37
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02038/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 13
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.21
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 23
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.42
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01997/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 0
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.22
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 45
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.85
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1081
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.85
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01956/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01956/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 35
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.64
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 15
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.45
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 911
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 80
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.43
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01918/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01918/stems/S10.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1084
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.2
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 105
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.75
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01925/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 27
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 62
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.47
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 11
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.77
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 61
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.62
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01916/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01916/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 253
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 714
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.29
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1200
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: 0
+    next_chains:
+      3: 0.98
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1412
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 18
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.09
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01951/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01951/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 4
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 7
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.79
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 992
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.27
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 20
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.21
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01902/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01902/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 62
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 0
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.39
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 35
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.97
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01972/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1998
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 18
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.07
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 48
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 62
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.21
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01963/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 99
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.16
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 72
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.47
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.71
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01930/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01930/stems/S07.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 788
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 89
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.72
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1394
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 28
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.18
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.43
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02090/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02090/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 39
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 511
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 104
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.3
+  - FxChain: []
+    next_chains:
+      0: 1.13
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02004/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains:
+      3: 1.46
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 53
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 503
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 60
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.8
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 54
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.21
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02096/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02096/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 49
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.26
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 7
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.59
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01990/stems/S06.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1782
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.7
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1612
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 32
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.89
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 54
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.77
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01993/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01993/stems/S08.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1794
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.04
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 46
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 102
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.83
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02094/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 5
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 15
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1407
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.7
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 285
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.71
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02026/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 80
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1934
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.02
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1001
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.67
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02019/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1107
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 31
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.62
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 214
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 107
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.66
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 78
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.51
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01947/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01947/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 27
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.63
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 53
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 1.19
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02005/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 26
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 223
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1008
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.79
+  - FxChain: []
+    next_chains:
+      1: 0.59
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02003/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 23
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.74
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 59
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 27
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 16
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.36
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 739
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.76
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02029/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02029/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1461
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 19
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.69
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 93
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.52
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01899/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 249
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.01
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 6
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.17
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01907/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 122
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 25
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.98
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 43
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.12
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 851
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.25
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02030/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02030/stems/S04.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 19
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.78
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1799
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1884
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.56
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 111
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.34
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02024/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02024/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 33
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 21
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.7
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.87
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 38
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 83
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 20
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.45
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01906/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01906/stems/S10.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 416
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 693
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 402
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.23
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 9
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.59
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02040/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 60
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 39
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 20
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.82
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 5
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.9
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01881/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 68
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 68
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.73
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.87
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01981/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 38
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 162
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.41
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 275
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 13
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.73
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1661
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.43
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01891/stems/S10.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01891/stems/S11.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 30
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 44
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.46
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 751
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.88
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01908/stems/S01.flac
+    audio_type: Bass
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 48
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 51
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.11
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 119
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.22
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 76
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.99
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02084/stems/S04.flac
+    audio_type: Bass
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02084/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 62
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 181
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.67
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 1
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.5
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02016/stems/S04.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 211
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.22
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 52
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 60
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 84
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.42
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 259
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 774
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.42
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01898/stems/S10.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01898/stems/S03.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 12
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 39
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.53
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 47
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.02
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.26
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02037/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02037/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 29
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.58
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 56
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 24
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.64
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 84
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 58
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.34
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01980/stems/S02.flac
+    audio_type: Bass
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01980/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 63
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.44
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 49
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 872
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.23
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 94
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.14
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02017/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02017/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 302
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      2: 0.21
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 13
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.64
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01911/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 57
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.21
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1104
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 1.39
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1268
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 50
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.23
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02046/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02046/stems/S08.flac
+    audio_type: Bass
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1313
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.3
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 113
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 1.31
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01878/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain: []
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 754
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.42
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 193
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.41
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02087/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 3
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 609
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.73
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 47
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.77
+  - FxChain: []
+    next_chains:
+      2: 1.2
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01886/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01886/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 6
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 20
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.86
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 74
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.73
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 172
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 59
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.66
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01954/stems/S00.flac
+    audio_type: Bass
+    input_FxChain: 1
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01954/stems/S03.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 4
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 510
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.42
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 204
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.74
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1541
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: 2
+    next_chains:
+      1: 0.82
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02095/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02095/stems/S02.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 62
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.52
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 142
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      3: 0.76
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 94
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 118
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 36
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.53
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01957/stems/S00.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01957/stems/S05.flac
+    audio_type: Bass
+    input_FxChain: 1
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1746
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 0.42
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 2
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain: []
+    next_chains:
+      1: 0.69
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01876/stems/S11.flac
+    audio_type: Guitar
+    input_FxChain: 0
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 554
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 7
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.33
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 48
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.58
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02074/stems/S06.flac
+    audio_type: Guitar
+    input_FxChain: 2
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: Schroeder (discoDSP)'
+      fx_type: reverb
+      preset_index: 74
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 19
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 17
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 1.02
+  - FxChain:
+    - fx_name: 'VST3: 3 Band EQ (DISTRHO)'
+      fx_type: eq
+      preset_index: 6
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      1: 0.32
+  - FxChain: []
+    next_chains:
+      1: 0.76
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02044/stems/S09.flac
+    audio_type: Bass
+    input_FxChain: 2
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track02044/stems/S05.flac
+    audio_type: Guitar
+    input_FxChain: 3
+  output_audio: null
+  customized: false
+- FxChains:
+  - FxChain:
+    - fx_name: 'VST3: ZamCompX2 (Damien Zammit)'
+      fx_type: compressor
+      preset_index: 1509
+      params: []
+      n_inputs: 3
+      n_outputs: 2
+      sidechain_input: null
+    next_chains: {}
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 220
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      2: 1.04
+  - FxChain:
+    - fx_name: 'VST3: Samurai Delay (discoDSP)'
+      fx_type: delay
+      preset_index: 185
+      params: []
+      n_inputs: 2
+      n_outputs: 2
+      sidechain_input: null
+    next_chains:
+      0: 0.72
+  input_audios:
+  - audio_path: /datasets2/slakh2100_flac_redux/test/Track01961/stems/S07.flac
+    audio_type: Guitar
+    input_FxChain: 1
+  output_audio: null
+  customized: false
