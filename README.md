@@ -49,12 +49,17 @@ customized: true
 }
 </code></pre>
 
-<p align="center"> <img src="pics/example.png" width="600" alt="Mixing Graph with the Provided Sample"> </p>
+<p align="center"> <img src="pics/example.png" width="600" alt="Mixing Graph with the Provided Sample"> 
+  <br>
+  <em>Mixing Graph with the Provided Sample</em>
+</p>
 
 ## 1. Docker Container Configuration
 
 <div align="center">
   <img src="pics/deploy.png" width="400" alt="WildFX Deployment">
+    <br>
+  <em>WildFX Deployment Environment</em>
 </div>
 
 ### 1.1. Set up host machine
@@ -139,12 +144,19 @@ python utils/test_reapy.py
 ## 4. Start Processing Your Dataset!
 <div align="center">
   <img src="pics/workflow.png" alt="WildFX Workflow">
+      <br>
+  <em>WildFX Workflow</em>
 </div>
-WildFX Workflow
+
+
 <div align="center">
   <img src="pics/layer.png" alt="WildFX Batch Processing">
+        <br>
+  <em>WildFX Batch Processing</em>
 </div>
-WildFX Batch Processing
+
+
+
 ### 4.1. Get your installed plugin list
 Sometimes after running this commands, you need to restart REAPER.
 ```
@@ -215,7 +227,32 @@ options:
 ### 4.4. Render audio with REAPER and save the dataset
 - `save_mode` is a important argument. You can set it to 'human-readable' to get `.wav` audio files and `.yaml` metadata in each project folderl; if you set to 'training-ready', then H5 files and `.gpickle` files for `networkx` graphs would be generated. You can choose both.
 ```
-python main.py
+usage: main.py [-h] [--save-mode {training-ready,human-readable}] [--save-compression-rate SAVE_COMPRESSION_RATE] [--metadata-yaml METADATA_YAML] [--output-dir OUTPUT_DIR] [--batch-size BATCH_SIZE]
+               [--project-batch-size PROJECT_BATCH_SIZE] [--start-idx START_IDX] [--end-idx END_IDX] [--filename-offset FILENAME_OFFSET] [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
+
+ReproFX-Graph - Process audio through FX chains defined in YAML metadata
+
+options:
+  -h, --help            show this help message and exit
+  --save-mode {training-ready,human-readable}
+                        Output format: 'training-ready' (H5/pickle) or 'human-readable' (WAV/YAML) (default: training-ready)
+  --save-compression-rate SAVE_COMPRESSION_RATE
+                        Compression method for H5 files (1-9, higher means more compression) (default: 4)
+  --metadata-yaml METADATA_YAML
+                        Path to the YAML metadata file (default: /workspaces/WildFX/proj_metadata/slakh-test.yaml)
+  --output-dir OUTPUT_DIR
+                        Output directory for processed files (default: /datasets1/wildfx/train)
+  --batch-size BATCH_SIZE
+                        Batch size for rendering (slightly larger than CPU cores) (default: 40)
+  --project-batch-size PROJECT_BATCH_SIZE
+                        Number of projects to process in a batch (default: 512)
+  --start-idx START_IDX
+                        Starting index for processing projects (default: 0)
+  --end-idx END_IDX     Ending index for processing projects (None = process until end) (default: None)
+  --filename-offset FILENAME_OFFSET
+                        Offset to add to project index for final output directory naming (default: 0)
+  --log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
+                        Set the logging level (default: INFO)
 ```
 
 
