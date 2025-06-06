@@ -80,8 +80,8 @@ if __name__ == "__main__":
     # Main configuration
     parser.add_argument("--input-audio", type=str, default=None,
                         help="Path to the audio sample used for cluster validation")
-    parser.add_argument("--no-cluster-validation", type=bool, default=False, required=True,
-                        help="Disenable cluster validation")
+    parser.add_argument("--no-cluster-validation", action="store_true",
+                        help="Disable cluster validation")
     parser.add_argument("--output-dir", type=str, default=f"{PLUGIN_PRESETS_DIR}",
                         help="Directory to store generated plugin presets")
     parser.add_argument("--detected-plugin-list", type=str, default="utils/reaper_plugins.csv",
@@ -112,8 +112,6 @@ if __name__ == "__main__":
                         help="CUDA device ID to use (default: use CUDA_VISIBLE_DEVICES env var)")
     parser.add_argument("--batch-size", type=int, default=256,
                         help="Batch size for MFCC feature extraction")
-    parser.add_argument("--validate_generation", action="store_true", default=True,
-                        help="Validate generated presets by clustering MFCC features")
     parser.add_argument("--skip-existing", action="store_true", default=True,
                         help="Skip plugins that already have generated presets")
     

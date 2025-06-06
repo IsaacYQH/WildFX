@@ -492,8 +492,14 @@ def generate_mixing_graph(
     if any(fx not in ALLOWED_FX_TYPES for fx in set(FX_TYPE_WEIGHTS.keys())):
         raise ValueError("Invalid FX types in FX_TYPE_WEIGHTS. Allowed types are defined in global_variables.py")
     
-    # Ensure output directory exists
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # --- Output path validation ---
+    if not output_path.endswith(".yaml"):
+        raise ValueError(f"Output path '{output_path}' must end with '.yaml'.")
+    output_dir = os.path.dirname(output_path)
+    # If output_dir is not empty string, ensure it exists
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    # If output_dir is '', do not attempt to create it (project root relative path)
         
     # Find all project folders in the dataset root directory
     # Each project should have a "stems" subfolder
