@@ -5,10 +5,13 @@ import yaml
 import os
 import json
 import bisect
-import sys
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
-from gen_presets import create_safe_instance_name
-from .global_variables import ALLOWED_FX_TYPES, PLUGIN_PRESETS_DIR
+import multiprocessing
+
+if __name__ == "__main__":
+    import sys
+    sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+from . import ALLOWED_FX_TYPES, PLUGIN_PRESETS_DIR, create_safe_instance_name
+from .sidechain_utils import detect_sidechain_cycles, build_sidechain_graph
 
 
 def find_closest(sorted_list: List[float], target: float) -> Optional[float]:
@@ -92,11 +95,12 @@ class InputAudio:
 @dataclass
 class Project:
     """Represents the overall project structure defined in the metadata."""
-    def __init__(self, FxChains: List[ChainDefinition], input_audios: List[InputAudio], output_audio: str=None, customized: bool = True):
+    def __init__(self, FxChains: List[ChainDefinition], input_audios: List[InputAudio], output_audio: str=None, customized: bool = True, plugin_presets_dir: str = PLUGIN_PRESETS_DIR):
         self.FxChains = FxChains
         self.input_audios = input_audios
         self.output_audio = output_audio
         self.customized = customized
+        self.plugin_presets_dir = plugin_presets_dir
         # Assign the validation method to the instance
         validation_errors = self.validate()
         if validation_errors:
@@ -104,165 +108,106 @@ class Project:
             raise ValueError(error_msg)
                         
     @staticmethod
-    def load_from_yaml(yaml_path: str) -> List['Project']:
-        """Loads a list of Project objects from a YAML file."""
-        if not os.path.exists(yaml_path):
-            raise FileNotFoundError(f"YAML file not found: {yaml_path}")
-        with open(yaml_path, 'r') as f:
-            try:
-                data_list = yaml.safe_load(f)
-            except yaml.YAMLError as e:
-                raise ValueError(f"Error parsing YAML file {yaml_path}: {e}")
+    def _parse_project_data(args):
+        """Parses a single project's data. Designed to be used with multiprocessing."""
+        proj_idx, project_data, plugin_presets_dir, yaml_path = args
+        
+        if not isinstance(project_data, dict):
+            raise TypeError(f"Expected item {proj_idx} in the list of {yaml_path} to be a dictionary.")
 
-        projects = []
-        if not isinstance(data_list, list):
-            raise TypeError(f"Expected top-level structure in {yaml_path} to be a list.")
+        # --- Parse FxChains ---
+        chain_defs_data = project_data.get('FxChains', [])
+        chain_defs = []
+        customized_flag = project_data.get('customized', True) # Default to True if not specified
+        if not isinstance(chain_defs_data, list):
+            raise TypeError("Expected 'FxChains' to be a list.")
+        # --- FX Chain Parsing Logic (Handles both customized and non-customized) ---
+        for chain_idx, chain_data in enumerate(chain_defs_data):
+            if not isinstance(chain_data, dict):
+                raise TypeError(f"Project {proj_idx}, Chain {chain_idx}: Expected items in 'FxChains' to be dictionaries.")
 
-        for proj_idx, project_data in enumerate(data_list):
-            if not isinstance(project_data, dict):
-                raise TypeError(f"Expected item {proj_idx} in the list of {yaml_path} to be a dictionary.")
+            fx_settings_data = chain_data.get('FxChain', [])
+            fx_settings = []
+            if not isinstance(fx_settings_data, list):
+                raise TypeError(f"Project {proj_idx}, Chain {chain_idx}: Expected 'FxChain' within a chain definition to be a list.")
 
-            # --- Parse FxChains ---
-            chain_defs_data = project_data.get('FxChains', [])
-            chain_defs = []
-            customized_flag = project_data.get('customized', True) # Default to True if not specified
-            if not isinstance(chain_defs_data, list):
-                raise TypeError("Expected 'FxChains' to be a list.")
-            # --- FX Chain Parsing Logic (Handles both customized and non-customized) ---
-            for chain_idx, chain_data in enumerate(chain_defs_data):
-                if not isinstance(chain_data, dict):
-                    raise TypeError(f"Project {proj_idx}, Chain {chain_idx}: Expected items in 'FxChains' to be dictionaries.")
+            # --- FXSetting Parsing Logic ---
+            for fx_idx, fx_data in enumerate(fx_settings_data):
+                if not isinstance(fx_data, dict):
+                    raise TypeError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Expected items in 'FxChain' list to be dictionaries.")
 
-                fx_settings_data = chain_data.get('FxChain', [])
-                fx_settings = []
-                if not isinstance(fx_settings_data, list):
-                    raise TypeError(f"Project {proj_idx}, Chain {chain_idx}: Expected 'FxChain' within a chain definition to be a list.")
+                fx_name = fx_data.get('fx_name')
+                fx_type = fx_data.get('fx_type') # Get the type
+                # --- Get n_inputs/n_outputs from YAML (if provided) ---
+                n_inputs_yaml = fx_data.get('n_inputs', None)
+                n_outputs_yaml = fx_data.get('n_outputs', None)
+                preset_index_yaml = fx_data.get('preset_index')
+                params_from_yaml = fx_data.get('params')
 
-                # --- FXSetting Parsing Logic ---
-                for fx_idx, fx_data in enumerate(fx_settings_data):
-                    if not isinstance(fx_data, dict):
-                        raise TypeError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Expected items in 'FxChain' list to be dictionaries.")
+                if fx_name is None:
+                    raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Missing 'fx_name'.")
+                if fx_type is None:
+                    raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Missing 'fx_type'.")
+                if fx_type not in ALLOWED_FX_TYPES:
+                    raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Invalid 'fx_type' '{fx_type}'. Allowed types: {ALLOWED_FX_TYPES}")
 
-                    fx_name = fx_data.get('fx_name')
-                    fx_type = fx_data.get('fx_type') # Get the type
-                    # --- Get n_inputs/n_outputs from YAML (if provided) ---
-                    n_inputs_yaml = fx_data.get('n_inputs', None)
-                    n_outputs_yaml = fx_data.get('n_outputs', None)
-                    preset_index_yaml = fx_data.get('preset_index')
-                    params_from_yaml = fx_data.get('params')
+                final_params = []
+                final_preset_index = preset_index_yaml
 
-                    if fx_name is None:
-                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Missing 'fx_name'.")
-                    if fx_type is None:
-                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Missing 'fx_type'.")
-                    if fx_type not in ALLOWED_FX_TYPES:
-                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Invalid 'fx_type' '{fx_type}'. Allowed types: {ALLOWED_FX_TYPES}")
+                safe_name = create_safe_instance_name(fx_name)
+                fx_path = os.path.join(plugin_presets_dir, f"{safe_name}.json")
+                # Load valid params structure for validation
+                try:
+                    with open(fx_path, 'r') as pf:
+                        preset_data = json.load(pf)
+                except FileNotFoundError:
+                    raise FileNotFoundError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Preset definition file not found for '{fx_name}' at {fx_path} (needed for param validation).")
+                except json.JSONDecodeError as e:
+                    raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Error decoding JSON from preset file {fx_path}: {e}")
+                except Exception as e:
+                    raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Error processing preset file {fx_path} for '{fx_name}': {e}")
+                
+                if preset_data.get('fx_name') != fx_name:
+                    raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Preset file {fx_path} does not match the fx_name '{fx_name}' in YAML.")
 
-                    final_params = []
-                    final_preset_index = preset_index_yaml
+                # Parameter loading/validation logic (only if customized)
+                if customized_flag:                        
+                    # Check if params are provided in YAML
+                    if params_from_yaml:
+                        if not isinstance(params_from_yaml, list):
+                            raise TypeError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'params' must be a list or null.")
+                        valid_params_dict = preset_data.get('valid_params')
+                        if valid_params_dict is None or not isinstance(valid_params_dict, dict):
+                            raise ValueError(f"Preset file {fx_path} for {fx_name} is missing 'valid_params' dictionary.")
+                        valid_params_values = list(valid_params_dict.values()) # Get list of valid value lists
 
-                    safe_name = create_safe_instance_name(fx_name)
-                    fx_path = os.path.join(PLUGIN_PRESETS_DIR, f"{safe_name}.json")
-                    # Load valid params structure for validation
-                    try:
-                        with open(fx_path, 'r') as pf:
-                            preset_data = json.load(pf)
-                    except FileNotFoundError:
-                        raise FileNotFoundError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Preset definition file not found for '{fx_name}' at {fx_path} (needed for param validation).")
-                    except json.JSONDecodeError as e:
-                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Error decoding JSON from preset file {fx_path}: {e}")
-                    except Exception as e:
-                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Error processing preset file {fx_path} for '{fx_name}': {e}")
-                    
-                    if preset_data.get('fx_name') != fx_name:
-                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx}: Preset file {fx_path} does not match the fx_name '{fx_name}' in YAML.")
+                        if len(valid_params_values) != len(params_from_yaml):
+                            raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Invalid number of params. Expected {len(valid_params_values)}, got {len(params_from_yaml)}.")
 
-                    # Parameter loading/validation logic (only if customized)
-                    if customized_flag:                        
-                        # Check if params are provided in YAML
-                        if params_from_yaml:
-                            if not isinstance(params_from_yaml, list):
-                                raise TypeError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'params' must be a list or null.")
-                            valid_params_dict = preset_data.get('valid_params')
-                            if valid_params_dict is None or not isinstance(valid_params_dict, dict):
-                                raise ValueError(f"Preset file {fx_path} for {fx_name} is missing 'valid_params' dictionary.")
-                            valid_params_values = list(valid_params_dict.values()) # Get list of valid value lists
-
-                            if len(valid_params_values) != len(params_from_yaml):
-                                raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Invalid number of params. Expected {len(valid_params_values)}, got {len(params_from_yaml)}.")
-
-                            # Check/adjust params against valid ranges/values
-                            final_params = []
-                            for i, (param_val, valid_value_list) in enumerate(zip(params_from_yaml, valid_params_values)):
-                                if param_val is None: # Allow null for default
-                                    final_params.append(None)
-                                elif isinstance(param_val, (int, float)):
-                                    if not valid_value_list: # If valid_value_list is empty, the final param is None
-                                        closest_valid = None
-                                    else:
-                                        # Assuming valid_value_list is sorted list of allowed discrete values
-                                        closest_valid = find_closest(sorted(valid_value_list), float(param_val))
-                                        if closest_valid is None: # Should not happen if valid_value_list is not empty
-                                            raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Could not find closest value for param {i} ({param_val}) in {fx_path}.")
-                                    final_params.append(closest_valid)
+                        # Check/adjust params against valid ranges/values
+                        final_params = []
+                        for i, (param_val, valid_value_list) in enumerate(zip(params_from_yaml, valid_params_values)):
+                            if param_val is None: # Allow null for default
+                                final_params.append(None)
+                            elif isinstance(param_val, (int, float)):
+                                if not valid_value_list: # If valid_value_list is empty, the final param is None
+                                    closest_valid = None
                                 else:
-                                    raise TypeError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Parameter {i} must be a number or null, got {type(param_val)}.")
+                                    # Assuming valid_value_list is sorted list of allowed discrete values
+                                    closest_valid = find_closest(sorted(valid_value_list), float(param_val))
+                                    if closest_valid is None: # Should not happen if valid_value_list is not empty
+                                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Could not find closest value for param {i} ({param_val}) in {fx_path}.")
+                                final_params.append(closest_valid)
+                            else:
+                                raise TypeError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Parameter {i} must be a number or null, got {type(param_val)}.")
 
-                            final_preset_index = None # Params were provided directly
+                        final_preset_index = None # Params were provided directly
 
-                        else:
-                            # Params are empty/None, try to load from preset file using preset_index
-                            if preset_index_yaml is None or not isinstance(preset_index_yaml, int) or preset_index_yaml < 0:
-                                raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Missing or invalid 'preset_index' when 'params' are not provided.")
-
-                            presets_list = preset_data.get('presets')
-                            if presets_list is None or not isinstance(presets_list, list):
-                                raise ValueError(f"Preset file {fx_path} for {fx_name} is missing 'presets' list.")
-                            if not (0 <= preset_index_yaml < len(presets_list)):
-                                raise IndexError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'preset_index' {preset_index_yaml} is out of bounds for presets in {fx_path} (found {len(presets_list)} presets).")
-
-                            final_params = presets_list[preset_index_yaml]
-                            final_preset_index = preset_index_yaml # Keep original index
-                        
-                        # --- Load Preset JSON for n_inputs/n_outputs Validation ---
-                        n_inputs_preset = None
-                        n_outputs_preset = None
-                        preset_load_error = None
-                        # Get n_inputs and n_outputs from preset, default to None if missing
-                        n_inputs_preset = preset_data.get('n_inputs')
-                        n_outputs_preset = preset_data.get('n_outputs')
-
-                        # Validate values from preset JSON
-                        if n_inputs_preset is None or not isinstance(n_inputs_preset, int) or n_inputs_preset < 1:
-                            preset_load_error = f"Invalid or missing 'n_inputs' ({n_inputs_preset}) in preset file {fx_path}. Must be a positive integer."
-                            n_inputs_preset = None # Mark as invalid
-                        if n_outputs_preset is None or not isinstance(n_outputs_preset, int) or n_outputs_preset < 1:
-                            preset_load_error = f"Invalid or missing 'n_outputs' ({n_outputs_preset}) in preset file {fx_path}. Must be a positive integer."
-                            n_outputs_preset = None # Mark as invalid
-
-                        if preset_load_error:
-                            # If preset loading failed, we cannot validate/populate n_inputs/n_outputs
-                            raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): {preset_load_error}")
-
-                        # --- Determine Final n_inputs/n_outputs ---
-                        final_n_inputs = n_inputs_preset
-                        final_n_outputs = n_outputs_preset
-
-                        # Validate YAML values against preset values if YAML provided them
-                        if n_inputs_yaml is not None:
-                            if not isinstance(n_inputs_yaml, int) or n_inputs_yaml < 1:
-                                print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_inputs' provided in YAML ({n_inputs_yaml}) is invalid. Must be a positive integer. Using value from preset file.")
-                            if n_inputs_yaml != n_inputs_preset:
-                                print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_inputs' in YAML ({n_inputs_yaml}) does not match the value in preset file {fx_path} ({n_inputs_preset}). Using value from preset file.")
-                            # If validation passes, the value is already set correctly
-
-                        if n_outputs_yaml is not None:
-                            if not isinstance(n_outputs_yaml, int) or n_outputs_yaml < 1:
-                                print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_outputs' provided in YAML ({n_outputs_yaml}) is invalid. Must be a positive integer. Using value from preset file.")
-                            if n_outputs_yaml != n_outputs_preset:
-                                print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_outputs' in YAML ({n_outputs_yaml}) does not match the value in preset file {fx_path} ({n_outputs_preset}). Using value from preset file.")
                     else:
-                        # In generated metadata, only the preset index will be given
+                        # Params are empty/None, try to load from preset file using preset_index
+                        if preset_index_yaml is None or not isinstance(preset_index_yaml, int) or preset_index_yaml < 0:
+                            raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): Missing or invalid 'preset_index' when 'params' are not provided.")
+
                         presets_list = preset_data.get('presets')
                         if presets_list is None or not isinstance(presets_list, list):
                             raise ValueError(f"Preset file {fx_path} for {fx_name} is missing 'presets' list.")
@@ -271,78 +216,165 @@ class Project:
 
                         final_params = presets_list[preset_index_yaml]
                         final_preset_index = preset_index_yaml # Keep original index
-                        final_n_inputs = n_inputs_yaml
-                        final_n_outputs = n_outputs_yaml
-
-                    # Append the final FXSetting with validated/fetched n_inputs/n_outputs
-                    fx_settings.append(FXSetting(
-                        fx_name=fx_name,
-                        fx_type=fx_type,
-                        preset_index=final_preset_index,
-                        params=final_params,
-                        n_inputs=final_n_inputs, # Use validated/fetched value
-                        n_outputs=final_n_outputs, # Use validated/fetched value
-                        sidechain_input=fx_data.get('sidechain_input')
-                    ))
                     
-                # --- End FXSetting Parsing Logic ---
+                    # --- Load Preset JSON for n_inputs/n_outputs Validation ---
+                    n_inputs_preset = None
+                    n_outputs_preset = None
+                    preset_load_error = None
+                    # Get n_inputs and n_outputs from preset, default to None if missing
+                    n_inputs_preset = preset_data.get('n_inputs')
+                    n_outputs_preset = preset_data.get('n_outputs')
 
-                # --- Parse next_chains (now a dictionary) ---
-                next_chains_data = chain_data.get('next_chains', {}) # Default to empty dict
-                if not isinstance(next_chains_data, dict):
-                     raise TypeError(f"Project {proj_idx}, Chain {chain_idx}: Expected 'next_chains' to be a dictionary, got {type(next_chains_data)}.")
+                    # Validate values from preset JSON
+                    if n_inputs_preset is None or not isinstance(n_inputs_preset, int) or n_inputs_preset < 1:
+                        preset_load_error = f"Invalid or missing 'n_inputs' ({n_inputs_preset}) in preset file {fx_path}. Must be a positive integer."
+                        n_inputs_preset = None # Mark as invalid
+                    if n_outputs_preset is None or not isinstance(n_outputs_preset, int) or n_outputs_preset < 1:
+                        preset_load_error = f"Invalid or missing 'n_outputs' ({n_outputs_preset}) in preset file {fx_path}. Must be a positive integer."
+                        n_outputs_preset = None # Mark as invalid
 
-                # Validate next_chains keys and values during load
-                validated_next_chains = {}
-                for next_idx_str, weight in next_chains_data.items():
-                    try:
-                        next_idx = int(next_idx_str)
-                    except ValueError:
-                         raise ValueError(f"Project {proj_idx}, Chain {chain_idx}: 'next_chains' contains non-integer key '{next_idx_str}'.")
-                    if not isinstance(weight, (int, float)) or weight < 0:
-                         raise ValueError(f"Project {proj_idx}, Chain {chain_idx}: 'next_chains' weight for key {next_idx} must be a non-negative number, got {weight}.")
-                    validated_next_chains[next_idx] = float(weight) # Store weight as float
+                    if preset_load_error:
+                        # If preset loading failed, we cannot validate/populate n_inputs/n_outputs
+                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): {preset_load_error}")
 
-                chain_defs.append(ChainDefinition(
-                    FxChain=fx_settings,
-                    next_chains=validated_next_chains # Use validated dictionary
+                    # --- Determine Final n_inputs/n_outputs ---
+                    final_n_inputs = n_inputs_preset
+                    final_n_outputs = n_outputs_preset
+
+                    # Validate YAML values against preset values if YAML provided them
+                    if n_inputs_yaml is not None:
+                        if not isinstance(n_inputs_yaml, int) or n_inputs_yaml < 1:
+                            print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_inputs' provided in YAML ({n_inputs_yaml}) is invalid. Must be a positive integer. Using value from preset file.")
+                        if n_inputs_yaml != n_inputs_preset:
+                            print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_inputs' in YAML ({n_inputs_yaml}) does not match the value in preset file {fx_path} ({n_inputs_preset}). Using value from preset file.")
+                        # If validation passes, the value is already set correctly
+
+                    if n_outputs_yaml is not None:
+                        if not isinstance(n_outputs_yaml, int) or n_outputs_yaml < 1:
+                            print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_outputs' provided in YAML ({n_outputs_yaml}) is invalid. Must be a positive integer. Using value from preset file.")
+                        if n_outputs_yaml != n_outputs_preset:
+                            print(f"Warning: Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'n_outputs' in YAML ({n_outputs_yaml}) does not match the value in preset file {fx_path} ({n_outputs_preset}). Using value from preset file.")
+                else:
+                    # In generated metadata, only the preset index will be given
+                    presets_list = preset_data.get('presets')
+                    if presets_list is None or not isinstance(presets_list, list):
+                        raise ValueError(f"Preset file {fx_path} for {fx_name} is missing 'presets' list.")
+                    if not (0 <= preset_index_yaml < len(presets_list)):
+                        raise IndexError(f"Project {proj_idx}, Chain {chain_idx}, FX {fx_idx} ('{fx_name}'): 'preset_index' {preset_index_yaml} is out of bounds for presets in {fx_path} (found {len(presets_list)} presets).")
+
+                    final_params = presets_list[preset_index_yaml]
+                    final_preset_index = preset_index_yaml # Keep original index
+                    final_n_inputs = n_inputs_yaml
+                    final_n_outputs = n_outputs_yaml
+
+                # Append the final FXSetting with validated/fetched n_inputs/n_outputs
+                fx_settings.append(FXSetting(
+                    fx_name=fx_name,
+                    fx_type=fx_type,
+                    preset_index=final_preset_index,
+                    params=final_params,
+                    n_inputs=final_n_inputs, # Use validated/fetched value
+                    n_outputs=final_n_outputs, # Use validated/fetched value
+                    sidechain_input=fx_data.get('sidechain_input')
                 ))
-            # --- End FX Chain Parsing ---
-            
-            # --- Parse InputAudios ---
-            input_audios_data = project_data.get('input_audios', [])
-            input_audios = []
-            if not isinstance(input_audios_data, list):
-                raise TypeError("Expected 'input_audios' to be a list.")
-            for audio_idx, audio_data in enumerate(input_audios_data):
-                if not isinstance(audio_data, dict):
-                    raise TypeError(f"Project {proj_idx}, InputAudio {audio_idx}: Expected items in 'input_audios' to be dictionaries.")
-                audio_path = audio_data.get('audio_path')
-                audio_type = audio_data.get('audio_type')
-                input_fx_chain = audio_data.get('input_FxChain')
-                if audio_path is None:
-                    raise ValueError(f"Project {proj_idx}, InputAudio {audio_idx}: Missing 'audio_path'.")
-                if audio_type is None:
-                    raise ValueError(f"Project {proj_idx}, InputAudio {audio_idx}: Missing 'audio_type'.")
-                if input_fx_chain is None or not isinstance(input_fx_chain, int):
-                    raise ValueError(f"Project {proj_idx}, InputAudio {audio_idx}: Missing or invalid 'input_FxChain'.")
-                input_audios.append(InputAudio(
-                    audio_path=audio_path,
-                    audio_type=audio_type,
-                    input_FxChain=input_fx_chain
-                ))
+                
+            # --- End FXSetting Parsing Logic ---
 
-            # --- Create Project Instance (will trigger __post_init__ validation) ---
+            # --- Parse next_chains (now a dictionary) ---
+            next_chains_data = chain_data.get('next_chains', {}) # Default to empty dict
+            if not isinstance(next_chains_data, dict):
+                    raise TypeError(f"Project {proj_idx}, Chain {chain_idx}: Expected 'next_chains' to be a dictionary, got {type(next_chains_data)}.")
+
+            # Validate next_chains keys and values during load
+            validated_next_chains = {}
+            for next_idx_str, weight in next_chains_data.items():
+                try:
+                    next_idx = int(next_idx_str)
+                except ValueError:
+                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}: 'next_chains' contains non-integer key '{next_idx_str}'.")
+                if not isinstance(weight, (int, float)) or weight < 0:
+                        raise ValueError(f"Project {proj_idx}, Chain {chain_idx}: 'next_chains' weight for key {next_idx} must be a non-negative number, got {weight}.")
+                validated_next_chains[next_idx] = float(weight) # Store weight as float
+
+            chain_defs.append(ChainDefinition(
+                FxChain=fx_settings,
+                next_chains=validated_next_chains # Use validated dictionary
+            ))
+        # --- End FX Chain Parsing ---
+        
+        # --- Parse InputAudios ---
+        input_audios_data = project_data.get('input_audios', [])
+        input_audios = []
+        if not isinstance(input_audios_data, list):
+            raise TypeError("Expected 'input_audios' to be a list.")
+        for audio_idx, audio_data in enumerate(input_audios_data):
+            if not isinstance(audio_data, dict):
+                raise TypeError(f"Project {proj_idx}, InputAudio {audio_idx}: Expected items in 'input_audios' to be dictionaries.")
+            audio_path = audio_data.get('audio_path')
+            audio_type = audio_data.get('audio_type')
+            input_fx_chain = audio_data.get('input_FxChain')
+            if audio_path is None:
+                raise ValueError(f"Project {proj_idx}, InputAudio {audio_idx}: Missing 'audio_path'.")
+            if audio_type is None:
+                raise ValueError(f"Project {proj_idx}, InputAudio {audio_idx}: Missing 'audio_type'.")
+            if input_fx_chain is None or not isinstance(input_fx_chain, int):
+                raise ValueError(f"Project {proj_idx}, InputAudio {audio_idx}: Missing or invalid 'input_FxChain'.")
+            input_audios.append(InputAudio(
+                audio_path=audio_path,
+                audio_type=audio_type,
+                input_FxChain=input_fx_chain
+            ))
+
+        # --- Create Project Instance (will trigger __post_init__ validation) ---
+        try:
+            project_instance = Project(
+                FxChains=chain_defs,
+                input_audios=input_audios,
+                output_audio=project_data.get('output_audio'),
+                customized=customized_flag,
+                plugin_presets_dir=plugin_presets_dir
+            )
+            return project_instance
+        except ValueError as validation_error:
+            raise ValueError(f"Validation failed for project {proj_idx} defined in {yaml_path}:\n{validation_error}")
+
+    @staticmethod
+    def load_from_yaml(yaml_path: str, plugin_presets_dir: str = PLUGIN_PRESETS_DIR, num_cores: Optional[int] = None) -> List['Project']:
+        """
+        Loads a list of Project objects from a YAML file, using multiprocessing for speed.
+
+        Args:
+            yaml_path (str): The path to the YAML file.
+            plugin_presets_dir (str): The directory where plugin presets are stored.
+            num_cores (Optional[int]): The number of CPU cores to use for parallel processing. 
+                                       If None, it will use all available cores.
+        
+        Returns:
+            List[Project]: A list of loaded Project objects.
+        """
+        if not os.path.exists(yaml_path):
+            raise FileNotFoundError(f"YAML file not found: {yaml_path}")
+        with open(yaml_path, 'r') as f:
             try:
-                project_instance = Project(
-                    FxChains=chain_defs,
-                    input_audios=input_audios,
-                    output_audio=project_data.get('output_audio'),
-                    customized=customized_flag
-                )
-                projects.append(project_instance)
-            except ValueError as validation_error:
-                raise ValueError(f"Validation failed for project {proj_idx} defined in {yaml_path}:\n{validation_error}")
+                data_list = yaml.safe_load(f)
+            except yaml.YAMLError as e:
+                raise ValueError(f"Error parsing YAML file {yaml_path}: {e}")
+
+        if not isinstance(data_list, list):
+            raise TypeError(f"Expected top-level structure in {yaml_path} to be a list.")
+
+        # Prepare arguments for each worker process
+        tasks = [(proj_idx, project_data, plugin_presets_dir, yaml_path)
+                 for proj_idx, project_data in enumerate(data_list)]
+
+        # Use a process pool to parse projects in parallel
+        with multiprocessing.Pool(processes=num_cores) as pool:
+            try:
+                # map will apply the function to each item in tasks and return a list of results
+                projects = pool.map(Project._parse_project_data, tasks)
+            except Exception as e:
+                # Catch exceptions from worker processes and re-raise them
+                raise e
 
         return projects
 
@@ -403,12 +435,13 @@ class Project:
             - The final output chain (with empty `next_chains`) CANNOT end with a Splitter.
         7.  **Sidechain Rules:**
             - `sidechain_input` must reference a valid chain index.
-            - Only one sidechain-enabled plugin is allowed per chain.
+            - Only one sidechain-enabled plugin is allowed per chain (structural constraint: each FXSetting 
+              can only have one sidechain_input). Multiple chains per layer can have sidechains.
             - A chain providing a sidechain signal (referenced by `sidechain_input`) must be
-            processed in the same layer or an earlier layer than the receiving chain,
-            as determined by the topological sort.
+            processed in the same layer as the receiving chain, as determined by the topological sort.
             - A plugin using `sidechain_input` should have `n_inputs > 1`.
             - Sidechain input cannot come from a splitter output chain.
+            - Multiple sidechains per layer are allowed, but circular dependencies are prohibited.
         8.  **Empty Chains:** Chains with an empty `FxChain` list are allowed (represent pass-through).
         9.  **Next Chains Dictionary:**
             - `next_chains` must be a dictionary.
@@ -548,7 +581,7 @@ class Project:
                             errors.append(f"Chain {current_chain_idx}, FX {fx_idx} ('{fx_setting.fx_name}'): n_outputs must be a positive integer, got {fx_setting.n_outputs}")
                         # Check if n_inputs and n_outputs are consistent with the preset
                         safe_name = create_safe_instance_name(fx_setting.fx_name)
-                        fx_path = os.path.join(PLUGIN_PRESETS_DIR, f"{safe_name}.json")
+                        fx_path = os.path.join(self.plugin_presets_dir, f"{safe_name}.json")
                         try:
                             with open(fx_path, 'r') as pf:
                                 preset_data = json.load(pf)
@@ -567,10 +600,11 @@ class Project:
                         if fx_setting.sidechain_input is not None:
                             # Increment sidechain count for this chain
                             sidechain_count += 1
-                            
-                            # Rule 1: Only allow at most one sidechain-enabled plugin per chain
-                            if sidechain_count > 1:
-                                errors.append(f"Chain {current_chain_idx}: Contains multiple sidechain-enabled plugins. Only one sidechain input is allowed per chain.")
+
+                            # deprecated: now we allow multiple sidechains per layer not formulating a circle (in Post-Topological Sort Checks)
+                            # Rule 1: Only allow at most one sidechain-enabled plugin per chain (structural constraint)
+                            # if sidechain_count > 1:
+                            #     errors.append(f"Chain {current_chain_idx}: Contains multiple sidechain-enabled plugins. Only one sidechain input is allowed per chain (each FXSetting can only have one sidechain_input).")
                                                     
                             sc_source_idx = fx_setting.sidechain_input
                             if not isinstance(sc_source_idx, int):
@@ -580,7 +614,7 @@ class Project:
                             elif sc_source_idx not in valid_chain_indices:
                                 errors.append(f"Chain {current_chain_idx}, FX {fx_idx}: sidechain_input index {sc_source_idx} is invalid.")
                             elif sc_source_idx not in init_queue: # Check if the source is in the current processing layer, so that REAPER can set track send correctly
-                                errors.append(f"Chain {current_chain_idx}, FX {fx_idx} ('{fx_setting.fx_name}'): sidechain_input index {sc_source_idx} is not in the current layer ({current_layer}).")
+                                errors.append(f"Chain {current_chain_idx}, FX {fx_idx} ('{fx_setting.fx_name}'): sidechain_input index {sc_source_idx} is not in the current layer ({current_layer}). Sidechain sources must be in the same layer as consumers.")
                             else:
                                 # Rule 2: The input of sidechain cannot come from a splitter output, because there is no mixed signal after the splitter
                                 # (splitter outputs represent separated frequency bands, not suitable for sidechain)
@@ -642,11 +676,19 @@ class Project:
             # Return early if cycle detected, as other checks might be invalid
             return sorted(list(set(errors)))
 
-        # 2. Start Node Consistency Check (Re-check after sort)
+        # 2. Sidechain Cycle Detection
+        # Build sidechain dependency graph and check for cycles
+        sidechain_graph = build_sidechain_graph(self.FxChains)
+        cycle_nodes = detect_sidechain_cycles(sidechain_graph)
+        if cycle_nodes:
+            cycle_list = sorted(list(cycle_nodes))
+            errors.append(f"Sidechain Cycle Detected: Circular dependency involving chains {cycle_list}")
+
+        # 3. Start Node Consistency Check (Re-check after sort)
         if actual_start_nodes != input_chain_indices:
              errors.append(f"Input Rule Violation: Mismatch between actual start nodes {actual_start_nodes} and designated input chains {input_chain_indices}.")
 
-        # 3. Single Output Node Check (Nodes with empty next_chains dict)
+        # 4. Single Output Node Check (Nodes with empty next_chains dict)
         end_nodes = [idx for idx in range(num_chains) if not self.FxChains[idx].next_chains]
         if len(end_nodes) == 0:
             errors.append("Output Rule Violation: No end node found (chain with empty next_chains).")
@@ -668,7 +710,8 @@ if __name__ == "__main__":
     yaml_file = '/workspaces/WildFX/proj_metadata/metadata.yaml' # Corrected path
 
     try:
-        loaded_projects = Project.load_from_yaml(yaml_file)
+        # Example: Load using 4 cores
+        loaded_projects = Project.load_from_yaml(yaml_file, num_cores=4)
         print(f"Successfully loaded {len(loaded_projects)} project(s).")
 
         # Example: Save back to a new file (optional)

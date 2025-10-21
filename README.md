@@ -68,6 +68,8 @@ customized: true
 #### 1.1.b. Add current user to docker group (the only step requiring sudo if docker is already installed!)
 ```
 sudo usermod -aG docker <username>
+# Optional, if your server has audio hardware
+sudo usermod -aG audio <username>
 ```
 
 #### 1.1.c. Create plugin folders in home directory
@@ -84,12 +86,23 @@ The docker container can be built conveniently using IDEs configurate by `.devco
 
 Below are the arguments in `.devcontainer/devcontainer.json` that specified to user's system.
 
-#### 1.2.1. Essential arguments
-- "USER_UID": "1014",  // adjust this to your host's user ID, get by 'id -u'
-- "USER_GID": "1015",  // adjust this to your host's user ID, get by 'id -g'
-- "AUDIO_GID": "29"  // adjust this to your host's audio group ID, get by getent group audio
-- 	"runArgs": ["--gpus=all", "--runtime=nvidia"]: if you did not set up the NVIDIA container runtime Toolkit on the host machine, you need to remove them. In fact, you basically don't need them at all in the container if you only need to generate the dataset but not train models inside the container.
-- 	"mounts": ["source=/path/on/host,target=/path/in/container,type=bind,consistency=cached]: mount folder /path/on/host to /path/in/container inside of the container. Usually it could be your dataset folder and the plugin folders we mentioned in 1.1.c..
+#### 1.2.a. Essential arguments in `.devcontainer/devcontainer.json`
+- `USER_UID`: "1014",  // adjust this to your host's user ID, get by `id -u`
+- `USER_GID`: "1015",  // adjust this to your host's group ID, get by `id -g`
+- `AUDIO_GID`: "29"  // adjust this to your host's audio group ID, get by `getent group audio`
+- `runArgs`: 
+  - `--gpus=all` and `--runtime=nvidia`: if you did not set up the NVIDIA container runtime Toolkit on the host machine, you need to remove them. In fact, you basically don't need them at all in the container if you only need to generate the dataset but not train models inside the container.
+  - `--shm-size` and `--memory`: configured according to the host system's available memory resources.
+  - `--cpuset-cpus=0-<biggest-cpu-id>`: configured according to the host system's available cpu cores. Not recommended to set beyond the result of `nproc`.
+- `mounts`: [
+
+  &emsp;"source=/path/on/host,target=/path/in/container,type=bind,consistency=cached,
+
+  &emsp;...
+  
+  ]
+  
+  mount folder /path/on/host to /path/in/container inside of the container. Usually it could be your dataset folder and the plugin folders we mentioned in 1.1.c..
 
 ### 1.3. Build docker container
 The Dockerfile is already provided in `.devcontainer/Dockerfile`. You can conveniently build the container by the *Dev Containers* Plugin in VS Code. Manual building by `docker run`, but not recommended. For manual building, we provide `.devcontainer/entrypoint.sh` to initialize the DAW.
@@ -184,7 +197,11 @@ python gen_presets.py --plugin-name "VST3: ZamCompX2 (Damien Zammit)" compressor
 # Use the reduced set with a custom input file
 python gen_presets.py --use-reduced-set --input-audio "/path/to/your/sample.wav"
 ```
-### 4.3. Generate projects to YAML file
+
+### 4.3 Define data collecting logic with your own dataset
+Add data collecting case in function `locate_targeted_stems` of script `gen_projects.py`. We have provided the example we used to collect data we want for the [Slakh2100](http://www.slakh.com/) dataset.
+
+### 4.4. Generate projects to YAML file
 You can also read the docstrins in `gen_projects.py`
 ```
 python gen_projects.py \
@@ -224,7 +241,8 @@ options:
   --density-range DENSITY_RANGE
                         If variable-density is enabled, controls the range (+/-) for random variation
 ```
-### 4.4. Render audio with REAPER and save the dataset
+
+### 4.5. Render audio with REAPER and save the dataset
 - `save_mode` is a important argument. You can set it to 'human-readable' to get `.wav` audio files and `.yaml` metadata in each project folderl; if you set to 'training-ready', then H5 files and `.gpickle` files for `networkx` graphs would be generated. You can choose both.
 ```
 usage: main.py [-h] [--save-mode {training-ready,human-readable}] [--save-compression-rate SAVE_COMPRESSION_RATE] [--metadata-yaml METADATA_YAML] [--output-dir OUTPUT_DIR] [--batch-size BATCH_SIZE]

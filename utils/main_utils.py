@@ -2,6 +2,7 @@ import os
 import logging
 import numpy as np
 import soundfile as sf
+import torchaudio
 from collections import defaultdict
 from typing import List, Dict
 import networkx as nx
@@ -9,6 +10,28 @@ import h5py
 import pickle
 import shutil
 from utils.data_class import Project, InputAudio
+import tempfile
+
+def configure_ram_disk(ram_gb=4.0, prefix='tmp'):
+    """Configure RAM disk settings from argparse values."""
+    ram_disk_path = '/dev/shm'
+    use_ram_disk = os.path.exists(ram_disk_path) and os.access(ram_disk_path, os.W_OK) and ram_gb > 0
+    
+    # Show RAM disk status
+    if use_ram_disk:
+        try:
+            statvfs = os.statvfs(ram_disk_path)
+            free_gb = (statvfs.f_frsize * statvfs.f_bavail) / (1024**3)
+            path = tempfile.mkdtemp(prefix=prefix, dir=ram_disk_path)
+            print(f"🚀 RAM disk enabled: {free_gb:.1f}GB free at {ram_disk_path} (allocated: {ram_gb}GB)")
+        except:
+            path = tempfile.mkdtemp(prefix=prefix)
+            print(f"⚠️  RAM disk at {ram_disk_path} - status unknown, falling back to regular disk")
+    else:
+        path = tempfile.mkdtemp(prefix=prefix)
+        print(f"💾 Using regular disk storage (RAM disk not available at {ram_disk_path})")
+    
+    return path
 
 def metadata_to_networkx(project: Project, available_plugins_param_names: Dict[str, List[str]]):
     """
@@ -203,7 +226,7 @@ def prepare_batch(batch_idx, tasks_in_batch, projects, current_layer, chain_outp
                     mixed_input_path = os.path.join(proj_tmp_dir, f"input_chain_{chain_idx}_mixed.wav")
 
                     try:
-                        mix_audio_files(predecessor_paths, weights, mixed_input_path)
+                        mix_audio_files(predecessor_paths, mixed_input_path)
                         input_path = mixed_input_path
                         logging.info(f"Successfully mixed {len(predecessor_paths)} inputs for task {task_id}")
                     except Exception as mix_err:
@@ -325,9 +348,11 @@ def process_layer_with_tracksend_awareness(tasks_in_layer, projects, batch_size)
     
     # 3. Form batches that respect the connected components
     batches = []
+    batches_gain = []
     batch_send_maps = []
     batch_splitter_tracks = []  # One list of splitter tracks per batch
     current_batch = []
+    current_batch_gain = []
     current_batch_send_map = {}
     current_batch_splitter_tracks = []  # Tracks splitter source tracks for current batch
     current_batch_size = 0
@@ -335,6 +360,7 @@ def process_layer_with_tracksend_awareness(tasks_in_layer, projects, batch_size)
     for group in task_groups:
         # Create a new group that will include duplicated entries for splitters
         expanded_group = []
+        expanded_group_gain = []
         original_to_expanded_indices = {}  # Maps original index -> list of expanded indices
         group_splitter_tracks = []  # Collect splitter source tracks for this group
         
@@ -343,14 +369,19 @@ def process_layer_with_tracksend_awareness(tasks_in_layer, projects, batch_size)
         for i, task_id in enumerate(group):
             original_to_expanded_indices[i] = [expanded_idx]
             expanded_group.append(task_id)
+            
+            proj_idx, chain_idx = task_id
+            gain_list = list(projects[proj_idx].FxChains[chain_idx].next_chains.values())
+            expanded_group_gain.append(gain_list[0] if gain_list else 1.0)  # Default gain of 1.0 if no next chains
             expanded_idx += 1
             
             # If this is a splitter task, duplicate it
             if task_id in num_splitter_tasks:
                 num_outputs = num_splitter_tasks[task_id]
                 # Add duplicates (one per output minus the original)
-                for _ in range(num_outputs):
+                for j in range(num_outputs - 1):
                     expanded_group.append(task_id)
+                    expanded_group_gain.append(gain_list[j+1]) # Gain for other splitter output
                     original_to_expanded_indices[i].append(expanded_idx)
                     expanded_idx += 1
         
@@ -409,6 +440,7 @@ def process_layer_with_tracksend_awareness(tasks_in_layer, projects, batch_size)
             
             # Extend current batch and update maps
             current_batch.extend(expanded_group)
+            current_batch_gain.extend(expanded_group_gain)
             current_batch_send_map.update(offset_send_map)
             current_batch_splitter_tracks.extend(offset_splitter_tracks)
             current_batch_size += group_size
@@ -416,20 +448,25 @@ def process_layer_with_tracksend_awareness(tasks_in_layer, projects, batch_size)
             # Start a new batch
             if current_batch:
                 batches.append(current_batch)
+                batches_gain.append(current_batch_gain)
                 batch_send_maps.append(current_batch_send_map)
                 batch_splitter_tracks.append(current_batch_splitter_tracks)
+            
+            # Reset for the new batch
             current_batch = expanded_group
-            current_batch_send_map = send_map
+            current_batch_gain = expanded_group_gain
+            current_batch_send_map = send_map  # send_map is already correct for the start of a batch
             current_batch_splitter_tracks = group_splitter_tracks.copy()
             current_batch_size = group_size
     
     # Add the last batch if not empty
     if current_batch:
         batches.append(current_batch)
+        batches_gain.append(current_batch_gain)
         batch_send_maps.append(current_batch_send_map)
         batch_splitter_tracks.append(current_batch_splitter_tracks)
     
-    return batches, batch_send_maps, batch_splitter_tracks, num_splitter_tasks
+    return batches, batches_gain, batch_send_maps, batch_splitter_tracks, num_splitter_tasks
 
 def process_final_output(
     proj_idx, 
@@ -474,19 +511,24 @@ def process_final_output(
                     # Create H5 file
                     with h5py.File(h5_path, 'w') as h5f:
                         # Load and store processed audio
-                        processed_audio, sr = sf.read(temp_output_path)
-                        h5f.create_dataset('output', data=processed_audio, compression="gzip", compression_opts=SAVE_COMPRESSION_RATE)
-                        h5f.create_dataset('output_sr', data=sr)
+                        processed_audio, sr = torchaudio.load(temp_output_path)
+                        output = h5f.create_dataset('output', data=processed_audio.numpy(), compression="gzip", compression_opts=SAVE_COMPRESSION_RATE)
+                        output.attrs['sample_rate'] = sr
                         
                         # Store all input stems
                         stems_group = h5f.create_group('stems')
+                        stems_group.attrs['n_stems'] = len(project.input_audios)
                         for i, ia in enumerate(project.input_audios):
-                            stem_audio, sr = sf.read(ia.audio_path)
-                            stems_group.create_dataset(f"input_audio_{i}", data=stem_audio, compression="gzip", compression_opts=SAVE_COMPRESSION_RATE)
-                            stems_group.create_dataset(f"input_audio_{i}_sr", data=sr)
+                            stem_audio, sr = torchaudio.load(ia.audio_path)
+                            stem = stems_group.create_dataset(f"input_audio_{i}", data=stem_audio.numpy(), compression="gzip", compression_opts=SAVE_COMPRESSION_RATE)
+                            stem.attrs['index'] = i
+                            stem.attrs['sample_rate'] = sr
+                            stem.attrs['audio_path'] = ia.audio_path
+                            stem.attrs['audio_type'] = ia.audio_type
+                            stem.attrs['input_FxChain'] = str(ia.input_FxChain)
                     logging.info(f"Saved H5 training data for Project {(proj_idx+offset)} to: {h5_path}")
                 except ImportError:
-                    logging.error("soundfile module not found. Install with 'pip install soundfile' to enable H5 export.")
+                    logging.error("h5py module not found. Install with 'pip install h5py' to enable H5 export.")
                 except Exception as h5_err:
                     logging.error(f"Failed to create H5 file for Project {(proj_idx+offset)}: {h5_err}")
                     
@@ -537,6 +579,96 @@ def process_final_output(
         logging.error(f"Error processing final output for Project {(proj_idx+offset)}: {e}")
         return False
 
+def mix_audio_files(input_files: List[str], output_path: str, channels: int = None, sample_rate: int = None, clipping_prevent_mode: str = None):
+    """
+    Loads multiple audio files, mixes them, and saves the result.
+
+    Args:
+        input_files: List of paths to input audio files.
+        output_path: Path to save the mixed audio file.
+
+    Raises:
+        ValueError: If input files have different sample rates or channel counts.
+        FileNotFoundError: If any input file is not found.
+    """
+    if not input_files:
+        logging.warning("mix_audio_files called with no input files.")
+        return
+
+    audio_data = []
+    max_len = 0
+
+    # Load audio files and find max length, check consistency
+    for i, file_path in enumerate(input_files):
+        try:
+            data, sr = sf.read(file_path, always_2d=True) # Read as 2D array (samples, channels)
+        except FileNotFoundError:
+            logging.error(f"Input file not found during mixing: {file_path}")
+            raise
+        except Exception as e:
+            logging.error(f"Error reading audio file {file_path}: {e}")
+            raise
+
+        if sample_rate is None:
+            sample_rate = sr
+        elif sr != sample_rate:
+            raise ValueError(f"Sample rate mismatch: Expected {sample_rate}, got {sr} for {file_path}")
+
+        if channels is None:
+            channels = data.shape[1]
+        elif data.shape[1] != channels:
+             # Attempt mono-to-stereo conversion if needed, or raise error
+             if channels == 2 and data.shape[1] == 1:
+                  logging.warning(f"Converting mono file {file_path} to stereo for mixing.")
+                  data = np.repeat(data, 2, axis=1) # Duplicate mono channel
+             elif channels == 1 and data.shape[1] == 2:
+                  logging.warning(f"Converting stereo file {file_path} to mono (averaging) for mixing.")
+                  data = np.mean(data, axis=1, keepdims=True)
+             else:
+                  raise ValueError(f"Channel count mismatch: Expected {channels}, got {data.shape[1]} for {file_path}")
+
+        audio_data.append(data)
+        if data.shape[0] > max_len:
+            max_len = data.shape[0]
+
+    # Pad shorter files to the length of the longest one
+    padded_audio_data = [
+        np.pad(data, ((0, max_len - data.shape[0]), (0, 0)), mode='constant')
+        for data in audio_data
+    ]
+
+    # Sum all padded audio data together in one go
+    mixed_signal = np.sum(padded_audio_data, axis=0)
+
+    # Trim ending silence (zeros) from the mixed signal
+    # Find the last sample where any channel has a non-zero value
+    nonzero_mask = np.any(mixed_signal != 0, axis=1)  # Check across channels for each sample
+    if np.any(nonzero_mask):
+        last_nonzero_idx = np.max(np.nonzero(nonzero_mask)[0])
+        mixed_signal = mixed_signal[:last_nonzero_idx + 1]
+        logging.debug(f"Trimmed ending silence: kept {last_nonzero_idx + 1} samples out of {len(nonzero_mask)}")
+    else:
+        # If the entire signal is zero, keep at least one sample to avoid empty audio
+        mixed_signal = mixed_signal[:1]
+        logging.warning(f"Mixed signal is entirely silent for {output_path}")
+
+    # Optional: Normalize or clip to prevent clipping
+    # Simple peak normalization:
+    # if clipping_prevent_mode == "normalize":
+    #     max_abs_val = np.max(np.abs(mixed_signal))
+    #     if max_abs_val > 1.0:
+    #         logging.warning(f"Mixed signal peak ({max_abs_val:.2f}) exceeds 1.0 for {output_path}. Normalizing.")
+    #         mixed_signal /= max_abs_val
+    # # Or hard clipping:
+    # elif clipping_prevent_mode == "hard_clip":
+    #     mixed_signal = np.clip(mixed_signal, -1.0, 1.0)
+
+    try:
+        sf.write(output_path, mixed_signal, sample_rate)
+        logging.debug(f"Successfully mixed {len(input_files)} files to {output_path}")
+    except Exception as e:
+        logging.error(f"Error writing mixed audio file {output_path}: {e}")
+        raise
 
 
 # For each layer, track tasks that need to be processed together due to sidechain dependencies
@@ -627,84 +759,3 @@ def process_final_output(
 #         batches.append(current_batch)
     
 #     return batches
-
-
-def mix_audio_files(input_files: List[str], weights: List[float], output_path: str, channels: int = None, sample_rate: int = None, clipping_prevent_mode: str = None):
-    """
-    Loads multiple audio files, mixes them according to weights, and saves the result.
-
-    Args:
-        input_files: List of paths to input audio files.
-        weights: List of weights (gain factors) corresponding to each input file.
-        output_path: Path to save the mixed audio file.
-
-    Raises:
-        ValueError: If input files have different sample rates or channel counts.
-        FileNotFoundError: If any input file is not found.
-    """
-    if not input_files:
-        logging.warning("mix_audio_files called with no input files.")
-        return
-
-    if len(input_files) != len(weights):
-        raise ValueError("Number of input files and weights must match.")
-
-    audio_data = []
-    max_len = 0
-
-    # Load audio files and find max length, check consistency
-    for i, file_path in enumerate(input_files):
-        try:
-            data, sr = sf.read(file_path, always_2d=True) # Read as 2D array (samples, channels)
-        except FileNotFoundError:
-            logging.error(f"Input file not found during mixing: {file_path}")
-            raise
-        except Exception as e:
-            logging.error(f"Error reading audio file {file_path}: {e}")
-            raise
-
-        if sample_rate is None:
-            sample_rate = sr
-        elif sr != sample_rate:
-            raise ValueError(f"Sample rate mismatch: Expected {sample_rate}, got {sr} for {file_path}")
-
-        if channels is None:
-            channels = data.shape[1]
-        elif data.shape[1] != channels:
-             # Attempt mono-to-stereo conversion if needed, or raise error
-             if channels == 2 and data.shape[1] == 1:
-                  logging.warning(f"Converting mono file {file_path} to stereo for mixing.")
-                  data = np.repeat(data, 2, axis=1) # Duplicate mono channel
-             elif channels == 1 and data.shape[1] == 2:
-                  logging.warning(f"Converting stereo file {file_path} to mono (averaging) for mixing.")
-                  data = np.mean(data, axis=1, keepdims=True)
-             else:
-                  raise ValueError(f"Channel count mismatch: Expected {channels}, got {data.shape[1]} for {file_path}")
-
-        audio_data.append(data)
-        if data.shape[0] > max_len:
-            max_len = data.shape[0]
-
-    # Pad shorter files and apply weights
-    mixed_signal = np.zeros((max_len, channels), dtype=np.float32)
-    for i, data in enumerate(audio_data):
-        padded_data = np.pad(data, ((0, max_len - data.shape[0]), (0, 0)), mode='constant')
-        mixed_signal += padded_data * weights[i]
-
-    # Optional: Normalize or clip to prevent clipping
-    # Simple peak normalization:
-    if clipping_prevent_mode == "normalize":
-        max_abs_val = np.max(np.abs(mixed_signal))
-        if max_abs_val > 1.0:
-            logging.warning(f"Mixed signal peak ({max_abs_val:.2f}) exceeds 1.0 for {output_path}. Normalizing.")
-            mixed_signal /= max_abs_val
-    # Or hard clipping:
-    elif clipping_prevent_mode == "hard_clip":
-        mixed_signal = np.clip(mixed_signal, -1.0, 1.0)
-
-    try:
-        sf.write(output_path, mixed_signal, sample_rate)
-        logging.debug(f"Successfully mixed {len(input_files)} files to {output_path}")
-    except Exception as e:
-        logging.error(f"Error writing mixed audio file {output_path}: {e}")
-        raise

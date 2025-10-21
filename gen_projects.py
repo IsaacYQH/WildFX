@@ -7,7 +7,8 @@ from typing import List, Dict, Set, Tuple
 from collections import defaultdict
 from scipy.stats import beta
 from utils.data_class import Project, ChainDefinition, FXSetting, InputAudio
-from utils.global_variables import ALLOWED_FX_TYPES, PLUGIN_PRESETS_DIR
+from utils import ALLOWED_FX_TYPES, PLUGIN_PRESETS_DIR
+from utils.sidechain_utils import has_sidechain_cycle
 
 
 # FX type weights for random selection (higher = more likely)
@@ -24,6 +25,7 @@ FX_TYPE_WEIGHTS = { # do not add splitter here, splitter is handled by variable 
 
 TARGET_AUDIO_TYPES = ["Bass", "Guitar"]
 
+# TODO: add mode to allow repeated type of stems
 def locate_targeted_stems(dataset_name: str, project_folder: str, min_stems: int, max_stems: int) -> Dict[str, str]:
     """
     A FUNCTION NEEDS TO BE SELF-DEFINED BY THE USER TO LOCATE THE TARGETED STEMS IN THE PROJECT FOLDER.
@@ -89,10 +91,8 @@ def locate_targeted_stems(dataset_name: str, project_folder: str, min_stems: int
             print(f"Found {len(target_stems)} stems matching target instruments: {', '.join(TARGET_AUDIO_TYPES)}")
 
         if len(target_stems) < min_stems:
-            print(f"Not enough matching instrument stems found, skip this ")
-            num_stems_to_use = min(random.randint(min_stems, max_stems), len(target_stems))
-            selected_stems = random.sample(all_stems, num_stems_to_use)
-            project_stems = [stem['path'] for stem in selected_stems]
+            print(f"Warning: Not enough matching instrument stems found (found {len(target_stems)}, required {min_stems}), skipping this project.")
+            return {}
         else:
             # Select between min_stems and max_stems from the target stems
             num_stems_to_use = min(random.randint(min_stems, max_stems), len(target_stems))
@@ -179,13 +179,15 @@ def create_mixing_topology(
     assert num_stems > 0, "num_stems must be greater than 0"
 
     # Determine number of chains based on complexity and stems
-    num_chains = max(
-        min_chains,
-        min(
-            max_chains,
-            int(num_stems * (1 + complexity * 2))  # 1x to 3x stems count
-        )
+    upper_bound_chains = min(
+        max_chains,
+        int(num_stems * (1 + complexity * 2))  # 1x to 3x stems count
     )
+    
+    if min_chains > upper_bound_chains:
+        num_chains = min_chains
+    else:
+        num_chains = random.randint(min_chains, upper_bound_chains)
     
     # Create connections dict (source_idx -> set of target_idx)
     connections = {i: set() for i in range(num_chains)}
@@ -261,7 +263,7 @@ def create_mixing_topology(
         layer = next_layer
         next_layer = set()
         
-    chain_layers[output_chain_idx] = current_layer_num
+    chain_layers[output_chain_idx] = current_layer_num + 1
         
     # Determine which chains should have splitters (only those with multiple outgoing connections)
     chains_needing_splitters = [
@@ -284,6 +286,9 @@ def assign_fx_to_chains(
     Populate each chain with appropriate FX
     Returns a list of ChainDefinition objects
     
+    This function now supports multiple sidechains per layer while preventing circular
+    dependencies through cycle detection. Previously, only one sidechain per layer was allowed.
+    
     Note on choice of sampling gain parameters:
         The advantages of using the beta distribution:
         1. Naturally bounded;
@@ -301,14 +306,17 @@ def assign_fx_to_chains(
     assert isinstance(chain_layers, dict), "chain_layers must be a dictionary"
     assert isinstance(chains_needing_splitters, list), "chains_needing_splitters must be a list"
     
+
     chain_definitions = []
     num_chains = len(connections)
-    # Track layers that already use sidechain
-    layers_with_sidechain = set()
+    # Track sidechain dependencies (consumer -> source)
+    # This allows multiple sidechains per layer while preventing circular dependencies
+    sidechain_graph = {}
     
     # Assign FX to each chain
     for chain_idx in range(num_chains):
         fx_chain = []
+        sidechain_enabled_in_this_chain = False
         
         # Determine number of effects in this chain
         num_fx = random.choices(
@@ -375,9 +383,9 @@ def assign_fx_to_chains(
             
             # Determine if this plugin should use sidechain
             sidechain_input = None
-            if (plugin.get('supports_sidechain', False) and 
-                random.random() < sidechain_probability and
-                current_layer not in layers_with_sidechain):  # Only allow one sidechain per layer
+            if (plugin.get('supports_sidechain', False) and
+                not sidechain_enabled_in_this_chain and
+                random.random() < sidechain_probability):
                 
                 # Find valid sidechain sources that are in the same layer
                 potential_sources = [
@@ -387,9 +395,17 @@ def assign_fx_to_chains(
                     and i not in chains_needing_splitters # sidechain input cannot come from a splitter output
                 ]
                 
-                if potential_sources:
-                    sidechain_input = random.choice(potential_sources)
-                    layers_with_sidechain.add(current_layer)  # Mark this layer as having a sidechain
+                # Filter out sources that would create cycles
+                valid_sources = []
+                for source_idx in potential_sources:
+                    if not has_sidechain_cycle(sidechain_graph, source_idx, chain_idx):
+                        valid_sources.append(source_idx)
+                
+                if valid_sources:
+                    sidechain_input = random.choice(valid_sources)
+                    # Track the sidechain dependency
+                    sidechain_graph[chain_idx] = sidechain_input
+                    sidechain_enabled_in_this_chain = True
             
             # Create FXSetting
             fx_setting = FXSetting(
@@ -412,9 +428,9 @@ def assign_fx_to_chains(
             # 3. can model the asymmetric nature of real mixing practices where engineers often prefer attenuation over boost.
             
             # Parameters to control shape (α>1, β>1 gives bell curve)
-            alpha, beta_param = 2, 3  # Slightly weighted toward lower gains
+            alpha, beta_param = 2.2, 2.8  # Adjusted to make the peak at a gain of 0.8
             # gain here is not in dB, but in linear scale, which can be converted to dB by: 20 * np.log10(x)
-            min_gain, max_gain = 0.1, 2.0  # -20dB to +6dB
+            min_gain, max_gain = 0.1, 1.0  # -20dB to +6dB
             gain = min_gain + beta.rvs(alpha, beta_param) * (max_gain - min_gain)
             next_chains_dict[target_idx] = round(gain, 2).item()
         
@@ -492,8 +508,14 @@ def generate_mixing_graph(
     if any(fx not in ALLOWED_FX_TYPES for fx in set(FX_TYPE_WEIGHTS.keys())):
         raise ValueError("Invalid FX types in FX_TYPE_WEIGHTS. Allowed types are defined in global_variables.py")
     
-    # Ensure output directory exists
-    os.makedirs(os.path.dirname(output_path), exist_ok=True)
+    # --- Output path validation ---
+    if not output_path.endswith(".yaml"):
+        raise ValueError(f"Output path '{output_path}' must end with '.yaml'.")
+    output_dir = os.path.dirname(output_path)
+    # If output_dir is not empty string, ensure it exists
+    if output_dir:
+        os.makedirs(output_dir, exist_ok=True)
+    # If output_dir is '', do not attempt to create it (project root relative path)
         
     # Find all project folders in the dataset root directory
     # Each project should have a "stems" subfolder

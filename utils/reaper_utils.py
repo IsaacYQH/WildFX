@@ -1,7 +1,5 @@
 import os
 import time
-import re
-import tempfile
 from functools import partial
 from tqdm import tqdm
 import reapy
@@ -9,7 +7,7 @@ from reapy import reascript_api as RPR
 from typing import Iterable
 import shutil
 import numpy as np
-from .global_variables import NOT_INTERESTED_PARAMS
+from . import NOT_INTERESTED_PARAMS
 
 def add_send_by_channel(
     project: reapy.core.ReapyObject, 
@@ -110,7 +108,18 @@ def delete_all_tracks():
         RPR.Main_OnCommand(40296, 0) # Select all tracks
         RPR.Main_OnCommand(40005, 0) # Remove selected tracks
 
-def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iterable, output_audio_path_list: Iterable, FxChain_list: Iterable, TrackSend_list: Iterable | dict = None, tracks_to_unselect: Iterable = None, batch_size: int=os.cpu_count()-1, max_wait: int=30):    
+def batch_render_fx(
+    project: reapy.core.ReapyObject, 
+    global_tmp_dir: str, 
+    input_audio_path_list: Iterable, 
+    output_audio_path_list: Iterable, 
+    FxChain_list: Iterable, 
+    gain_list: Iterable = None,
+    TrackSend_list: Iterable | dict = None, 
+    tracks_to_unselect: Iterable = None, 
+    batch_size: int=os.cpu_count()-1, 
+    max_wait: int=30
+    ):    
     """
     Batch render audio through FX with different presets.
     """
@@ -122,6 +131,7 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
     is_first_nested = isinstance(input_audio_path_list[0], (list, tuple))
     assert all(isinstance(x, (list, tuple)) == is_first_nested for x in input_audio_path_list), "All elements in input_audio_path_list must be consistently nested or non-nested"
     assert all(isinstance(x, (list, tuple)) == is_first_nested for x in output_audio_path_list), "output_audio_path_list nesting structure must match input_audio_path_list"
+    assert all(isinstance(x, (list, tuple)) == is_first_nested for x in gain_list), "gain_list nesting structure must match input_audio_path_list"
     assert all(isinstance(y, (list, tuple)) == is_first_nested for x in FxChain_list for y in x), "FxChain_list nesting structure must match input_audio_path_list"
     if TrackSend_list is not None:
         if not is_first_nested:
@@ -132,7 +142,8 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
             raise TypeError("Only nested lists are supported for tracks_to_unselect")
         assert len(tracks_to_unselect) == len(input_audio_path_list), "tracks_to_unselect must have the same length as other input lists"
 
-    tmp_output_dir = tempfile.mkdtemp()
+    tmp_output_dir = os.path.join(global_tmp_dir, "batch_render")
+    os.makedirs(tmp_output_dir, exist_ok=True)
 
     # Ensure batch_size doesn't exceed the number of items
     batch_size = min(batch_size, len(input_audio_path_list)) if not is_first_nested else max([len(x) for x in input_audio_path_list])
@@ -143,6 +154,7 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
         input_chunks = input_audio_path_list
         output_chunks = output_audio_path_list
         fx_chunks = FxChain_list
+        gain_chunks = gain_list
         if TrackSend_list is not None:
             track_send_chunks = TrackSend_list
         if tracks_to_unselect is not None:
@@ -152,6 +164,7 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
         input_chunks = [input_audio_path_list[i:i + batch_size] for i in range(0, len(input_audio_path_list), batch_size)]
         output_chunks = [output_audio_path_list[i:i + batch_size] for i in range(0, len(output_audio_path_list), batch_size)]
         fx_chunks = [FxChain_list[i:i + batch_size] for i in range(0, len(FxChain_list), batch_size)]
+        gain_chunks = [gain_list[i:i + batch_size] for i in range(0, len(gain_list), batch_size)]
         if TrackSend_list is not None:
             track_send_chunks = [TrackSend_list[i:i + batch_size] for i in range(0, len(TrackSend_list), batch_size)]
         if tracks_to_unselect is not None:
@@ -167,7 +180,7 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
         project.set_info_string('RENDER_PATTERN', 'tmp_output')
         
         # Create the zip iterator
-        zip_iterator = zip(input_chunks, output_chunks, fx_chunks)
+        zip_iterator = zip(input_chunks, output_chunks, fx_chunks, gain_chunks)
 
         # Initialize tqdm wrapping the iterator, providing the total number of chunks
         outer_pbar = tqdm(zip_iterator, total=len(input_chunks), desc="Processing chunks", unit="chunk")
@@ -175,11 +188,11 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
         
         # cache API references and Create partials with correct parameters
         add_audio_to_new_track = partial(RPR.InsertMedia, p1 = 1)
-        for k, (input_chunk, output_chunk, fx_chunk) in enumerate(outer_pbar):
+        for k, (input_chunk, output_chunk, fx_chunk, gain_chunk) in enumerate(outer_pbar):
             # max_n_inputs = []
             # max_n_outputs = []
             # Create a new track for each audio file
-            for j, (audio_path, FxChain) in enumerate(zip(input_chunk, fx_chunk)):
+            for j, (audio_path, FxChain, gain) in enumerate(zip(input_chunk, fx_chunk, gain_chunk)):
                 if audio_path is None:
                     project.add_track(index = j)  # Add an empty track if no audio file is provided
                     # max_n_inputs.append(0)
@@ -209,6 +222,7 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
                         #     current_max_n_outputs = fx.n_outputs
                     # max_n_inputs.append(current_max_n_inputs)
                     # max_n_outputs.append(current_max_n_outputs)
+                project.tracks[j].set_info_value("D_VOL", gain)
             
             # Set Track Sends (default number of channels for each track is 2)
             if TrackSend_list is not None:
@@ -223,7 +237,7 @@ def batch_render_fx(project: reapy.core.ReapyObject, input_audio_path_list: Iter
                     for i, receive_track_index in enumerate(track_send_chunks[k][track_send]):
                         sidechain_channel_info = [(fx_setting['n_inputs'], fx_setting['n_outputs']) for fx_setting in fx_chunk[receive_track_index] if fx_setting.get("sidechain_input")]
                         if len(sidechain_channel_info) > 1:
-                            raise ValueError(f"Currently, only one sidechain input is supported. Found {len(sidechain_channel_info)} sidechain inputs in track {receive_track_index}.")
+                            raise ValueError(f"Only one sidechain input is supported. Found {len(sidechain_channel_info)} sidechain inputs in track {receive_track_index}.")
                         elif len(sidechain_channel_info) == 1: # currently, only support one sidechain input
                             # if the receive track has sidechain input, we need to set the input channel
                             n_input_channel, n_output_channel = sidechain_channel_info[0]
@@ -404,35 +418,6 @@ def fx_get_valid_params(track_id: str, fx_index: int, max_grid: int = 100) -> di
             fx_parameters[param_name] = valid_values
     return fx_parameters
 
-def create_safe_instance_name(plugin_name):
-    """
-    Creates a safe instance name for folders and files based on the plugin name.
-    Also appends the provider's name at the end.
-    
-    Args:
-        plugin_name (str): The full plugin name
-        
-    Returns:
-        str: A safe instance name suitable for file and folder names
-    """
-    # Extract provider name from within parentheses at the end, if present
-    provider_match = re.search(r'\((.+?)\)$', plugin_name)
-    provider = provider_match.group(1) if provider_match else "Unknown"
-    
-    # Remove plugin type prefix and manufacturer
-    plugin_base_name = re.sub(r'^(VST3?|AU|CLAP|LV2|JS):\s*', '', plugin_name)
-    plugin_base_name = re.sub(r'\(.+?\)$', '', plugin_base_name).strip()
-    
-    # Replace special characters with underscores, collapse multiple underscores
-    safe_name = re.sub(r'[^\w\s-]', '_', plugin_base_name)
-    safe_name = re.sub(r'\s+', '_', safe_name).strip('_')
-    safe_name = re.sub(r'_+', '_', safe_name)
-    
-    # Append provider name
-    safe_name = f"{safe_name}_{provider.replace(' ', '_')}"
-    
-    return safe_name
-
 def generate_perceptual_frequency_list(min_freq, max_freq, num_points=100):
     """
     Generate a list of frequencies that are perceptually equally spaced
@@ -461,6 +446,25 @@ def generate_perceptual_frequency_list(min_freq, max_freq, num_points=100):
     hz_points[-1] = max_freq
     
     return list(hz_points)
+
+def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
+    # cache API references and Create partials with correct parameters
+    add_audio_to_new_track = partial(RPR.InsertMedia, p1 = 1)
+    # Create a new track for each audio file
+    assert os.path.exists(audio_path), f"Audio file {audio_path} does not exist"
+    add_audio_to_new_track(p0 = audio_path) # mode 1 means insert media to a new track
+    for fx_dict in FxChain:
+        fx = project.tracks[j].add_fx(fx_dict.fx_name)
+        # Set FX parameters
+        if isinstance(fx_dict.params, list):
+            preset_params = fx_dict.params
+        elif isinstance(fx_dict.params, dict):
+            preset_params = list(fx_dict.params.values())
+        assert len(preset_params) == len(fx.params), f"FX {fx_dict.fx_name} has {len(fx.params)} parameters, but {len(preset_params)} were provided"
+        interested_params_list = [(i, v) for i, v in enumerate(preset_params) if v is not None] # if v is None meaning that we keep it as default, it will be ignored
+        for param_idx, param_value in interested_params_list:
+            fx.params[param_idx] = param_value
+
 
 # def fx_get_interested_params_num(valid_params: dict) -> dict:
 #     """

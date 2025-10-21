@@ -1,6 +1,5 @@
 import os
 import time
-import tempfile
 import json
 import shutil
 import reapy
@@ -10,21 +9,23 @@ from collections import defaultdict
 from utils.data_class import Project
 from utils.reaper_utils import batch_render_fx, delete_all_tracks
 from utils.main_utils import *
-from utils.global_variables import PLUGIN_PRESETS_DIR
+from utils import PLUGIN_PRESETS_DIR
 from typing import List, Tuple, Dict, Set
 import concurrent.futures
 from itertools import islice
 
 # --- Default Configuration Values ---
-DEFAULT_SAVE_MODE = "training-ready"
+DEFAULT_SAVE_MODE = "human-readable"  # Options: 'training-ready' (H5/pickle) or 'human-readable' (WAV/YAML)
 DEFAULT_SAVE_COMPRESSION_RATE = 4
-DEFAULT_METADATA_YAML_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'proj_metadata/slakh-test.yaml')
-DEFAULT_FINAL_OUTPUT_DIR = "/datasets1/wildfx/train"
+# DEFAULT_METADATA_YAML_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'proj_metadata/reaper_test/project_1.yaml')
+DEFAULT_METADATA_YAML_PATH = 'proj_metadata/reaper_test.yaml'
+DEFAULT_FINAL_OUTPUT_DIR = "/home/isaac/Music/reaper_test_output"
 DEFAULT_BATCH_SIZE = 40
 DEFAULT_PROJECT_BATCH_SIZE = 512
 DEFAULT_METADATA_START_IDX = 0
 DEFAULT_METADATA_END_IDX = None
 DEFAULT_FILENAME_OFFSET = 0
+DEFAULT_RAM_DISK_GB = 128  # 0 means disabled
 
 # Type Alias for Task ID
 TaskId = Tuple[int, int]
@@ -47,7 +48,7 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
          metadata_yaml_path=DEFAULT_METADATA_YAML_PATH, final_output_dir=DEFAULT_FINAL_OUTPUT_DIR,
          batch_size=DEFAULT_BATCH_SIZE, project_batch_size=DEFAULT_PROJECT_BATCH_SIZE,
          metadata_start_idx=DEFAULT_METADATA_START_IDX, metadata_end_idx=DEFAULT_METADATA_END_IDX,
-         filename_offset=DEFAULT_FILENAME_OFFSET):
+         filename_offset=DEFAULT_FILENAME_OFFSET, ram_disk_gb=DEFAULT_RAM_DISK_GB):
     """
     Loads current_batch_projects from YAML, processes them layer by layer using parallel batch processing,
     and saves the final outputs.
@@ -113,18 +114,52 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
     """
     start_time = time.time()
     logging.info("Starting processing...")
+
     
     if not os.path.exists(metadata_yaml_path):
         logging.error(f"Metadata YAML file not found: {metadata_yaml_path}")
         return
-
+    
     os.makedirs(final_output_dir, exist_ok=True)
-    global_tmp_dir = tempfile.mkdtemp(prefix="wildfx_main")
+    os.makedirs(os.path.join(final_output_dir, "metadata"), exist_ok=True)
+
+    # --- Metadata Handling: Check for existing data and append if offset matches ---
+    destination_metadata_path = os.path.join(final_output_dir, "metadata", "metadata.yaml")
+    if os.path.exists(destination_metadata_path):
+        logging.info(f"Existing metadata found at {destination_metadata_path}. Verifying filename_offset...")
+        try:
+            # Load existing projects to get the count
+            existing_projects = Project.load_from_yaml(destination_metadata_path, num_cores = batch_size)
+            num_existing_projects = len(existing_projects)
+            
+            if num_existing_projects == filename_offset:
+                logging.info(f"Offset {filename_offset} matches existing project count {num_existing_projects}. Appending new metadata.")
+                with open(metadata_yaml_path, 'r') as source_file, open(destination_metadata_path, 'a') as dest_file:
+                    dest_file.write('\n') # Ensure separation between YAML documents
+                    shutil.copyfileobj(source_file, dest_file)
+            else:
+                logging.critical(f"CRITICAL ERROR: Mismatch between existing project count ({num_existing_projects}) and filename_offset ({filename_offset}).")
+                logging.critical("To prevent data corruption, processing is halted. Please correct the --filename-offset argument.")
+                return # Stop execution
+        except Exception as e:
+            logging.critical(f"CRITICAL ERROR: Could not process existing metadata file {destination_metadata_path}: {e}")
+            return # Stop execution
+    else:
+        # If no metadata exists, just copy the new file.
+        logging.info("No existing metadata found. Copying new metadata file.")
+        try:
+            shutil.copy2(metadata_yaml_path, destination_metadata_path)
+        except Exception as e:
+            logging.error(f"Error copying initial metadata file: {e}")
+            return
+
+    # Configure RAM disk if requested
+    global_tmp_dir = configure_ram_disk(ram_gb=ram_disk_gb, prefix="wildfx_main")
     logging.info(f"Created global temporary directory: {global_tmp_dir}")
 
     # 1. Load projects
     logging.info(f"Loading current_batch_projects from {metadata_yaml_path}...")
-    projects = Project.load_from_yaml(metadata_yaml_path)
+    projects = Project.load_from_yaml(metadata_yaml_path, num_cores = batch_size)
     logging.info(f"Loaded {len(projects)} projects.")
 
     # Load parameters' names of plugins
@@ -144,12 +179,20 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                 print(f"Error loading plugin preset file {filename}: {e}")
                 
     # Copy complete metadata to final output directory
-    try:
-        shutil.copy2(metadata_yaml_path, os.path.join(final_output_dir, "metadata", "metadata.yaml"))
-    except FileExistsError or PermissionError:
-        print(f"Metadata {metadata_yaml_path} already exists in the final output directory. Skipping copy.")
-    except Exception as e:
-        print(f"Error copying metadata file: {e}")
+    # try:
+    #     shutil.copy2(metadata_yaml_path, os.path.join(final_output_dir, "metadata", "metadata.yaml"))
+    # except FileExistsError:
+    #     with open(metadata_yaml_path, 'r') as original_file:
+    #         original_metadata = original_file.read()
+    #     num_original_metadata = original_metadata.count('\n')
+
+    #     if filename_offset == num_original_metadata:
+    #         print(f"Metadata {metadata_yaml_path} already exists in the final output directory. Appending to existing file.")
+    #         with open(os.path.join(final_output_dir, "metadata", "metadata.yaml"), 'a') as f:
+    #             f.write(original_metadata)
+    # except Exception as e:
+    #     print(f"Error copying metadata file: {e}")
+    
     # Check if metadata_start_idx and metadata_end_idx are valid
     if metadata_start_idx < 0 or metadata_start_idx >= len(projects):
         logging.error(f"Invalid metadata_start_idx: {metadata_start_idx}. Must be between 0 and {len(projects)-1}.")
@@ -206,6 +249,9 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
         next_layer_tasks = [task_id for task_id, degree in in_degree.items() 
                         if degree == 0 and task_id in chain_outputs]
         reaper_project = reapy.Project() # Get a handle to the REAPER project
+        
+        # Track audio files by layer for memory cleanup
+        layer_audio_files = {}  # layer_num -> set of file paths created in that layer
 
         try:
             while next_layer_tasks:
@@ -213,13 +259,9 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                 next_layer_tasks = []
                 
                 logging.info(f"\n--- Processing Layer {current_layer} ---")
-                
-                
-                batches_inputs = []
-                batches_outputs = []
-                batches_fx_chains = []
+
                 # Get task_id batches that respect sidechain dependencies
-                tasks_in_batches, send_map_batches, tracks_to_unselect, current_num_splitter_tasks = process_layer_with_tracksend_awareness(current_layer_tasks, current_batch_projects, batch_size)
+                tasks_in_batches, gain_batches, send_map_batches, tracks_to_unselect, current_num_splitter_tasks = process_layer_with_tracksend_awareness(current_layer_tasks, current_batch_projects, batch_size)
                 num_splitter_tasks.update(current_num_splitter_tasks) # Update the global splitter task count
                 
                 # Replace the sequential batch preparation with parallel processing
@@ -258,6 +300,10 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                 batches_inputs = []
                 batches_outputs = []
                 batches_fx_chains = []
+                
+                # Track mixed audio files created during batch preparation
+                if current_layer not in layer_audio_files:
+                    layer_audio_files[current_layer] = set()
 
                 for batch_idx in range(len(tasks_in_batches)):
                     if batch_idx in batches_data:
@@ -266,6 +312,11 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                         batches_outputs.append(batch_outputs)
                         batches_fx_chains.append(batch_fx_chains)
                         chain_outputs.update(local_chain_outputs)
+                        
+                        # Track any mixed input files that were created during batch preparation
+                        for input_path in batch_inputs:
+                            if input_path and input_path.startswith(global_tmp_dir):
+                                layer_audio_files[current_layer].add(input_path)
                     else:
                         # Handle missing batch (error occurred during preparation)
                         logging.error(f"Missing data for batch {batch_idx}, using empty lists")
@@ -276,10 +327,41 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                 # Execute batch rendering if there are tasks
                 flatten_tasks_in_batches = [task for batch in tasks_in_batches for task in batch]
                 if flatten_tasks_in_batches:
+                    # Clean up audio files from previous layers to save memory
+                    # Keep the previous layer and delete the one before that
+                    if current_layer > 0:
+                        logging.info(f"Cleaning up intermediate audio files from Layer {current_layer - 1}...")
+                        cleanup_layer = current_layer - 1
+                        if cleanup_layer in layer_audio_files:
+                            files_to_delete = layer_audio_files[cleanup_layer]
+                            deleted_count = 0
+                            for file_path in files_to_delete:
+                                try:
+                                    if os.path.exists(file_path):
+                                        os.remove(file_path)
+                                        deleted_count += 1
+                                except Exception as e:
+                                    logging.warning(f"Could not delete intermediate file {file_path}: {e}")
+                            
+                            if deleted_count > 0:
+                                logging.info(f"Cleaned up {deleted_count} intermediate audio files from Layer {cleanup_layer}")
+                            
+                            # Remove the layer from tracking
+                            del layer_audio_files[cleanup_layer]
+
                     logging.info(f"Rendering {len(flatten_tasks_in_batches)} tasks in batch for Layer {current_layer}...")
                     # try:
                     # Ensure tracks are clear before batch
-                    batch_render_fx(reaper_project, batches_inputs, batches_outputs, batches_fx_chains, send_map_batches, tracks_to_unselect, batch_size)
+                    batch_render_fx(
+                        reaper_project, 
+                        global_tmp_dir,
+                        batches_inputs, 
+                        batches_outputs, 
+                        batches_fx_chains, 
+                        gain_batches,
+                        send_map_batches, 
+                        tracks_to_unselect, 
+                        batch_size)
                     logging.info(f"Finished rendering batch for Layer {current_layer}.")
                     
                     # Parallelize output verification
@@ -302,7 +384,7 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                             task_id, exists = future.result()
                             file_exists_results[task_id] = exists
                 
-                    # Verify outputs exist after rendering (optional but good)
+                    # Verify outputs exist after rendering and track created files
                     for i, task_id in enumerate(flatten_tasks_in_batches):
                         if not file_exists_results[task_id]:
                             logging.error(f"Output file missing after render for task {task_id}: {flatten_batches_outputs[i]}")
@@ -310,6 +392,11 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                                 del chain_outputs[task_id]
                         else:
                             processed_chains.add(task_id)
+                            # Track created audio files for this layer (rendered outputs)
+                            output_path = flatten_batches_outputs[i]
+                            if output_path and output_path.startswith(global_tmp_dir):
+                                layer_audio_files[current_layer].add(output_path)
+                            
                             for successor_task_id in successors[task_id]:
                                 in_degree[successor_task_id] -= 1
                                 if in_degree[successor_task_id] == 0:
@@ -364,6 +451,9 @@ def main(save_mode=DEFAULT_SAVE_MODE, save_compression_rate=DEFAULT_SAVE_COMPRES
                 
         except Exception as e:
             logging.exception(f"An unexpected error occurred during processing: {e}") # Log full traceback
+            logging.info(f"Cleaning up metadata in {global_tmp_dir}...")
+            if os.path.exists(os.path.join(final_output_dir, "metadata")):
+                shutil.rmtree(os.path.join(final_output_dir, "metadata"), ignore_errors=True)
         finally:
             # 6. Cleanup
             logging.info(f"Cleaning up temporary directory: {global_tmp_dir}")
@@ -421,6 +511,9 @@ def parse_args():
     parser.add_argument('--filename-offset', type=int, default=DEFAULT_FILENAME_OFFSET,
                         help="Offset to add to project index for final output directory naming")
     
+    parser.add_argument('--ram-disk-gb', type=float, default=DEFAULT_RAM_DISK_GB,
+                        help="RAM disk size in GB for temporary files (0 = disabled)")
+    
     parser.add_argument('--log-level', type=str, default='INFO',
                         choices=['DEBUG', 'INFO', 'WARNING', 'ERROR', 'CRITICAL'],
                         help="Set the logging level")
@@ -445,4 +538,5 @@ if __name__ == "__main__":
         metadata_start_idx=args.start_idx,
         metadata_end_idx=args.end_idx,
         filename_offset=args.filename_offset,
+        ram_disk_gb=args.ram_disk_gb,
     )

@@ -10,8 +10,9 @@ import torch
 import torch.nn as nn
 import torchaudio.transforms as T
 import reapy
-from utils.reaper_utils import create_safe_instance_name, batch_render_fx, fx_get_metadata
-from utils.global_variables import ALLOWED_FX_TYPES, PLUGIN_PRESETS_DIR
+from utils.reaper_utils import batch_render_fx, fx_get_metadata
+from utils import ALLOWED_FX_TYPES, PLUGIN_PRESETS_DIR, create_safe_instance_name
+from utils.main_utils import configure_ram_disk
 from tqdm import tqdm
 from sklearn.cluster import KMeans
 import argparse
@@ -80,8 +81,8 @@ if __name__ == "__main__":
     # Main configuration
     parser.add_argument("--input-audio", type=str, default=None,
                         help="Path to the audio sample used for cluster validation")
-    parser.add_argument("--no-cluster-validation", type=bool, default=False, required=True,
-                        help="Disenable cluster validation")
+    parser.add_argument("--no-cluster-validation", action="store_true",
+                        help="Disable cluster validation")
     parser.add_argument("--output-dir", type=str, default=f"{PLUGIN_PRESETS_DIR}",
                         help="Directory to store generated plugin presets")
     parser.add_argument("--detected-plugin-list", type=str, default="utils/reaper_plugins.csv",
@@ -112,10 +113,10 @@ if __name__ == "__main__":
                         help="CUDA device ID to use (default: use CUDA_VISIBLE_DEVICES env var)")
     parser.add_argument("--batch-size", type=int, default=256,
                         help="Batch size for MFCC feature extraction")
-    parser.add_argument("--validate_generation", action="store_true", default=True,
-                        help="Validate generated presets by clustering MFCC features")
     parser.add_argument("--skip-existing", action="store_true", default=True,
                         help="Skip plugins that already have generated presets")
+    parser.add_argument("--ram-disk-gb", type=float, default=0,
+                        help="RAM disk size in GB for temporary files (0 = disabled)")
     
     args = parser.parse_args()
     # Set random seed
@@ -240,7 +241,8 @@ if __name__ == "__main__":
     plugin_preset_dir = args.output_dir
     os.makedirs(plugin_preset_dir, exist_ok=True)
     audio_input_path = args.input_audio
-    tmp_output_dir = tempfile.mkdtemp()
+    # Configure RAM disk if requested
+    tmp_output_dir = configure_ram_disk(ram_gb=args.ram_disk_gb, prefix="gen_presets")
     # num_generations = 100 changed to num_generations = 2**num_valid_params * 10
     # num_presets = 10 changed to num_presets = 2**num_valid_params
     # random_sampling = args.random_sampling
