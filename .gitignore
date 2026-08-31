@@ -1,4 +1,7 @@
 *__pycache__*
 *peaks*
 .vscode
+.DS_Store
 utils/sample_for_gen_presets.wav
+dafx_demo/
+wildfx_output/

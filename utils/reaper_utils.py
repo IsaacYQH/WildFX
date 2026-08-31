@@ -1,25 +1,37 @@
 import os
+import shutil
 import time
 from functools import partial
-from tqdm import tqdm
-import reapy
-from reapy import reascript_api as RPR
-from typing import Iterable
-import shutil
+from typing import Iterable, Optional, Union
+
 import numpy as np
+import reapy
+import soundfile as sf
+from reapy import reascript_api as RPR
+from tqdm import tqdm
+
 from . import NOT_INTERESTED_PARAMS
 
+READ_ONLY_PARAMS_BY_PLUGIN = {
+    "VST3: ZamCompX2 (Damien Zammit)": {"gain reduction", "output level"},
+}
+# REAPER sink configuration: WAV, 32-bit IEEE floating point. Keeping
+# intermediate renders floating point preserves over-full-scale samples until a
+# deliberate presentation/mastering policy is applied.
+WAV_32_FLOAT_RENDER_CONFIG = "ZXZhdyAAAAE="
+
+
 def add_send_by_channel(
-    project: reapy.core.ReapyObject, 
-    send_track_index: int, 
+    project: reapy.core.ReapyObject,
+    send_track_index: int,
     receive_track_index: int,
-    src_channel: list = [1, 2],  # Default to stereo channels 1+2
-    dst_channel: list = [1, 2],  # Default to stereo channels 1+2
-    send_volume: float = 1.0
-):
+    src_channel: Optional[list] = None,
+    dst_channel: Optional[list] = None,
+    send_volume: float = 1.0,
+) -> reapy.core.ReapyObject:
     """
     Add a send from one track to another with precise channel routing control.
-    
+
     Args:
         project: The REAPER project object
         send_track_index: Index of the track sending the signal
@@ -27,39 +39,74 @@ def add_send_by_channel(
         src_channel: List of source channels [ch1, ch2]. Use single item for mono (e.g. [1])
         dst_channel: List of destination channels [ch1, ch2]. Use single item for mono (e.g. [3])
         send_volume: Volume level for the send (1.0 = 0dB)
-    
+
     Examples:
         # Send mono from channel 1 to channel 3
         add_send_by_channel(proj, 0, 1, src_channel=[1], dst_channel=[3])
-        
+
         # Send stereo from channels 1+2 to channels 3+4
         add_send_by_channel(proj, 0, 1, src_channel=[1, 2], dst_channel=[3, 4])
     """
+    src_channel = [1, 2] if src_channel is None else src_channel
+    dst_channel = [1, 2] if dst_channel is None else dst_channel
+
     # Validate arguments
     if not isinstance(send_track_index, int) or send_track_index < 0:
-        raise ValueError(f"Send track index must be a non-negative integer, got {send_track_index}")
-    
+        raise ValueError(
+            f"Send track index must be a non-negative integer, got {send_track_index}"
+        )
+
     if not isinstance(receive_track_index, int) or receive_track_index < 0:
-        raise ValueError(f"Receive track index must be a non-negative integer, got {receive_track_index}")
-    
-    if not isinstance(src_channel, list) or len(src_channel) == 0 or len(src_channel) > 2:
-        raise ValueError(f"Source channel must be a list with 1 or 2 items, got {src_channel}")
-    
-    if not isinstance(dst_channel, list) or len(dst_channel) == 0 or len(dst_channel) > 2:
-        raise ValueError(f"Destination channel must be a list with 1 or 2 items, got {dst_channel}")
-    
+        raise ValueError(
+            f"Receive track index must be a non-negative integer, got {receive_track_index}"
+        )
+
+    if (
+        not isinstance(src_channel, list)
+        or len(src_channel) == 0
+        or len(src_channel) > 2
+    ):
+        raise ValueError(
+            f"Source channel must be a list with 1 or 2 items, got {src_channel}"
+        )
+
+    if (
+        not isinstance(dst_channel, list)
+        or len(dst_channel) == 0
+        or len(dst_channel) > 2
+    ):
+        raise ValueError(
+            f"Destination channel must be a list with 1 or 2 items, got {dst_channel}"
+        )
+
     # Validate channel numbers
     for ch in src_channel:
         if not isinstance(ch, int) or ch < 1:
-            raise ValueError(f"Channel numbers must be positive integers, got {ch} in src_channel")
-    
+            raise ValueError(
+                f"Channel numbers must be positive integers, got {ch} in src_channel"
+            )
+
     for ch in dst_channel:
         if not isinstance(ch, int) or ch < 1:
-            raise ValueError(f"Channel numbers must be positive integers, got {ch} in dst_channel")
-    
-    if not isinstance(send_volume, (int, float)) or send_volume < 0:
-        raise ValueError(f"Send volume must be a non-negative number, got {send_volume}")
-    
+            raise ValueError(
+                f"Channel numbers must be positive integers, got {ch} in dst_channel"
+            )
+    if len(src_channel) == 2 and src_channel[1] != src_channel[0] + 1:
+        raise ValueError(f"Stereo source channels must be consecutive: {src_channel}")
+    if len(dst_channel) == 2 and dst_channel[1] != dst_channel[0] + 1:
+        raise ValueError(
+            f"Stereo destination channels must be consecutive: {dst_channel}"
+        )
+
+    if (
+        not isinstance(send_volume, (int, float))
+        or not np.isfinite(send_volume)
+        or send_volume < 0
+    ):
+        raise ValueError(
+            f"Send volume must be a non-negative number, got {send_volume}"
+        )
+
     with reapy.inside_reaper():
         # Get the send track and receive track
         send_track = project.tracks[send_track_index]
@@ -67,11 +114,11 @@ def add_send_by_channel(
 
         # Create a new send from the send track to the receive track
         send = send_track.add_send(receive_track)
-        
+
         # Determine if source/destination are mono based on list length
         src_mono = len(src_channel) == 1
         dst_mono = len(dst_channel) == 1
-        
+
         # Calculate source channel value based on REAPER's bit-masking system
         src_value = 0
         if src_mono:
@@ -81,74 +128,139 @@ def add_send_by_channel(
             # For stereo: the value is the index of the first channel pair
             # For channels 1+2: value=0, channels 2+3: value=1, etc.
             src_value = src_channel[0] - 1
-            
+
         # Calculate destination channel value using the same logic
         dst_value = 0
         if dst_mono:
             dst_value = 1024 + (dst_channel[0] - 1)
         else:
             dst_value = dst_channel[0] - 1
-        
+
         # Set the channel mapping for the send
-        send.set_info('I_SRCCHAN', src_value)
-        send.set_info('I_DSTCHAN', dst_value)
+        send.set_info("I_SRCCHAN", src_value)
+        send.set_info("I_DSTCHAN", dst_value)
+        # Post-FX/pre-fader keeps a unity-gain sidechain control edge independent
+        # from the source chain's main-output gain.
+        send.set_info("I_SENDMODE", 3)
 
         # Set the volume of the send
-        send.set_info('D_VOL', send_volume)
-        
+        send.set_info("D_VOL", send_volume)
+
         return send
-    
-def delete_all_tracks():
+
+
+def delete_all_tracks() -> None:
     """
     Delete all tracks in the current REAPER project.
-    
+
     This function uses the REAPER API to select all tracks and then delete them.
     """
     with reapy.inside_reaper():
-        RPR.Main_OnCommand(40296, 0) # Select all tracks
-        RPR.Main_OnCommand(40005, 0) # Remove selected tracks
+        RPR.Main_OnCommand(40296, 0)  # Select all tracks
+        RPR.Main_OnCommand(40005, 0)  # Remove selected tracks
+
 
 def batch_render_fx(
-    project: reapy.core.ReapyObject, 
-    global_tmp_dir: str, 
-    input_audio_path_list: Iterable, 
-    output_audio_path_list: Iterable, 
-    FxChain_list: Iterable, 
-    gain_list: Iterable = None,
-    TrackSend_list: Iterable | dict = None, 
-    tracks_to_unselect: Iterable = None, 
-    batch_size: int=os.cpu_count()-1, 
-    max_wait: int=30
-    ):    
+    project: reapy.core.ReapyObject,
+    global_tmp_dir: str,
+    input_audio_path_list: Iterable,
+    output_audio_path_list: Iterable,
+    FxChain_list: Iterable,
+    gain_list: Optional[Iterable] = None,
+    TrackSend_list: Optional[Iterable | dict] = None,
+    tracks_to_unselect: Optional[Iterable] = None,
+    batch_size: int = max(1, (os.cpu_count() or 2) - 1),
+    max_wait: int = 30,
+    render_tail_seconds: Union[float, Iterable[float]] = 0.0,
+) -> None:
     """
     Batch render audio through FX with different presets.
     """
-    assert len(input_audio_path_list) == len(output_audio_path_list), "input_audio_path_list and output_audio_path_list must have the same length"
-    assert len(input_audio_path_list) > 0 and len(FxChain_list) > 0 and len(input_audio_path_list) == len(FxChain_list), "input_audio_path_list and FxChain_list must be not empty and have the same length"
-    # assert 0 < batch_size <= os.cpu_count(), "batch_size must be a positive integer less than or equal to the number of available CPU cores"
+    input_audio_path_list = list(input_audio_path_list)
+    output_audio_path_list = list(output_audio_path_list)
+    FxChain_list = list(FxChain_list)
+    if gain_list is not None:
+        gain_list = list(gain_list)
+    if batch_size < 1:
+        raise ValueError("batch_size must be positive")
+    if len(input_audio_path_list) != len(output_audio_path_list):
+        raise ValueError("Input and output lists must have the same length")
+    if (
+        not input_audio_path_list
+        or not FxChain_list
+        or len(input_audio_path_list) != len(FxChain_list)
+    ):
+        raise ValueError("Input and FX-chain lists must be nonempty and aligned")
+    if gain_list is None:
+        gain_list = (
+            [[1.0] * len(chunk) for chunk in input_audio_path_list]
+            if isinstance(input_audio_path_list[0], (list, tuple))
+            else [1.0] * len(input_audio_path_list)
+        )
+    if isinstance(render_tail_seconds, (int, float)):
+        render_tail_value = float(render_tail_seconds)
+        if not np.isfinite(render_tail_value) or render_tail_value < 0:
+            raise ValueError("render_tail_seconds must be finite and non-negative")
+        render_tail_values = None
+    else:
+        render_tail_values = [float(value) for value in render_tail_seconds]
+        if not all(np.isfinite(value) and value >= 0 for value in render_tail_values):
+            raise ValueError("Every render tail must be finite and non-negative")
 
     # Check consistent nesting across all input iterables
     is_first_nested = isinstance(input_audio_path_list[0], (list, tuple))
-    assert all(isinstance(x, (list, tuple)) == is_first_nested for x in input_audio_path_list), "All elements in input_audio_path_list must be consistently nested or non-nested"
-    assert all(isinstance(x, (list, tuple)) == is_first_nested for x in output_audio_path_list), "output_audio_path_list nesting structure must match input_audio_path_list"
-    assert all(isinstance(x, (list, tuple)) == is_first_nested for x in gain_list), "gain_list nesting structure must match input_audio_path_list"
-    assert all(isinstance(y, (list, tuple)) == is_first_nested for x in FxChain_list for y in x), "FxChain_list nesting structure must match input_audio_path_list"
+    if not all(
+        isinstance(item, (list, tuple)) == is_first_nested
+        for item in input_audio_path_list
+    ):
+        raise ValueError("Input paths must use one consistent nesting structure")
+    if not all(
+        isinstance(item, (list, tuple)) == is_first_nested
+        for item in output_audio_path_list
+    ):
+        raise ValueError("Output paths must match the input nesting structure")
+    if not all(
+        isinstance(item, (list, tuple)) == is_first_nested for item in gain_list
+    ):
+        raise ValueError("Gains must match the input nesting structure")
+    if not all(
+        isinstance(chain, (list, tuple)) == is_first_nested
+        for group in FxChain_list
+        for chain in group
+    ):
+        raise ValueError("FX chains must match the input nesting structure")
+    if not (
+        len(input_audio_path_list)
+        == len(output_audio_path_list)
+        == len(FxChain_list)
+        == len(gain_list)
+    ):
+        raise ValueError("Input, output, FX-chain, and gain lists must be aligned")
     if TrackSend_list is not None:
         if not is_first_nested:
             raise TypeError("Only nested lists are supported for TrackSend_list")
-        assert len(TrackSend_list) == len(input_audio_path_list), "TrackSend_list must have the same length as other input lists"
+        if len(TrackSend_list) != len(input_audio_path_list):
+            raise ValueError("Track sends must have one entry per input batch")
     if tracks_to_unselect is not None:
         if not is_first_nested:
             raise TypeError("Only nested lists are supported for tracks_to_unselect")
-        assert len(tracks_to_unselect) == len(input_audio_path_list), "tracks_to_unselect must have the same length as other input lists"
+        if len(tracks_to_unselect) != len(input_audio_path_list):
+            raise ValueError("Unselected tracks must have one entry per input batch")
 
     tmp_output_dir = os.path.join(global_tmp_dir, "batch_render")
     os.makedirs(tmp_output_dir, exist_ok=True)
 
     # Ensure batch_size doesn't exceed the number of items
-    batch_size = min(batch_size, len(input_audio_path_list)) if not is_first_nested else max([len(x) for x in input_audio_path_list])
+    batch_size = (
+        min(batch_size, len(input_audio_path_list))
+        if not is_first_nested
+        else max([len(x) for x in input_audio_path_list])
+    )
     # Generate name set of temporary files based on REAPER's naming convention
-    tmp_files_paths = [os.path.join(tmp_output_dir, f'tmp_output-{i:0{3}d}.wav') for i in range(1, batch_size+1)]
+    tmp_files_paths = [
+        os.path.join(tmp_output_dir, f"tmp_output-{i:0{3}d}.wav")
+        for i in range(1, batch_size + 1)
+    ]
 
     if is_first_nested:
         input_chunks = input_audio_path_list
@@ -159,61 +271,153 @@ def batch_render_fx(
             track_send_chunks = TrackSend_list
         if tracks_to_unselect is not None:
             unselect_chunks = tracks_to_unselect
+        if render_tail_values is None:
+            tail_chunks = [render_tail_value] * len(input_chunks)
+        elif len(render_tail_values) == len(input_chunks):
+            tail_chunks = render_tail_values
+        else:
+            raise ValueError("Render tails must have one value per input batch")
     else:
         # Split inputs into chunks for batched processing
-        input_chunks = [input_audio_path_list[i:i + batch_size] for i in range(0, len(input_audio_path_list), batch_size)]
-        output_chunks = [output_audio_path_list[i:i + batch_size] for i in range(0, len(output_audio_path_list), batch_size)]
-        fx_chunks = [FxChain_list[i:i + batch_size] for i in range(0, len(FxChain_list), batch_size)]
-        gain_chunks = [gain_list[i:i + batch_size] for i in range(0, len(gain_list), batch_size)]
+        input_chunks = [
+            input_audio_path_list[i : i + batch_size]
+            for i in range(0, len(input_audio_path_list), batch_size)
+        ]
+        output_chunks = [
+            output_audio_path_list[i : i + batch_size]
+            for i in range(0, len(output_audio_path_list), batch_size)
+        ]
+        fx_chunks = [
+            FxChain_list[i : i + batch_size]
+            for i in range(0, len(FxChain_list), batch_size)
+        ]
+        gain_chunks = [
+            gain_list[i : i + batch_size] for i in range(0, len(gain_list), batch_size)
+        ]
         if TrackSend_list is not None:
-            track_send_chunks = [TrackSend_list[i:i + batch_size] for i in range(0, len(TrackSend_list), batch_size)]
+            track_send_chunks = [
+                TrackSend_list[i : i + batch_size]
+                for i in range(0, len(TrackSend_list), batch_size)
+            ]
         if tracks_to_unselect is not None:
-            unselect_chunks = [tracks_to_unselect[i:i + batch_size] for i in range(0, len(tracks_to_unselect), batch_size)]
-    
+            unselect_chunks = [
+                tracks_to_unselect[i : i + batch_size]
+                for i in range(0, len(tracks_to_unselect), batch_size)
+            ]
+        if render_tail_values is not None:
+            raise TypeError("Per-batch render tails require nested input lists")
+        tail_chunks = [render_tail_value] * len(input_chunks)
+
     with reapy.inside_reaper():
         # Remove all tracks before starting
         delete_all_tracks()
-        
+
         # Render settings
-        project.set_info_value('RENDER_SETTINGS', 3) # render selected tracks as stems
-        project.set_info_string('RENDER_FILE', tmp_output_dir)
-        project.set_info_string('RENDER_PATTERN', 'tmp_output')
-        
+        project.set_info_value("RENDER_SETTINGS", 3)  # render selected tracks as stems
+        project.set_info_value("RENDER_BOUNDSFLAG", 1)  # render the entire project
+        project.set_info_value("RENDER_ADDTOPROJ", 0)
+        project.set_info_value("RENDER_DITHER", 16)  # disable dither/noise shaping
+        project.set_info_value(
+            "RENDER_NORMALIZE", 4 << 16
+        )  # disable render postprocessing
+        project.set_info_string("RENDER_FORMAT", WAV_32_FLOAT_RENDER_CONFIG)
+        project.set_info_string("RENDER_FORMAT2", "")
+        project.set_info_string("RENDER_FILE", tmp_output_dir)
+        project.set_info_string("RENDER_PATTERN", "tmp_output")
         # Create the zip iterator
-        zip_iterator = zip(input_chunks, output_chunks, fx_chunks, gain_chunks)
+        zip_iterator = zip(
+            input_chunks,
+            output_chunks,
+            fx_chunks,
+            gain_chunks,
+            tail_chunks,
+        )
 
         # Initialize tqdm wrapping the iterator, providing the total number of chunks
-        outer_pbar = tqdm(zip_iterator, total=len(input_chunks), desc="Processing chunks", unit="chunk")
+        outer_pbar = tqdm(
+            zip_iterator,
+            total=len(input_chunks),
+            desc="Processing chunks",
+            unit="chunk",
+        )
 
-        
         # cache API references and Create partials with correct parameters
-        add_audio_to_new_track = partial(RPR.InsertMedia, p1 = 1)
-        for k, (input_chunk, output_chunk, fx_chunk, gain_chunk) in enumerate(outer_pbar):
+        add_audio_to_new_track = partial(RPR.InsertMedia, p1=1)
+        for k, (
+            input_chunk,
+            output_chunk,
+            fx_chunk,
+            gain_chunk,
+            tail_seconds,
+        ) in enumerate(outer_pbar):
+            # InsertMedia uses the current edit cursor. Reset it so interactive
+            # REAPER state cannot add leading silence to offline renders.
+            RPR.SetEditCurPos(0.0, False, False)
+            if not (
+                len(input_chunk)
+                == len(output_chunk)
+                == len(fx_chunk)
+                == len(gain_chunk)
+            ):
+                raise ValueError(f"Render chunk {k} contains misaligned lists")
+            sample_rates = {
+                sf.info(audio_path).samplerate
+                for audio_path in input_chunk
+                if audio_path is not None
+            }
+            if len(sample_rates) != 1:
+                raise ValueError(
+                    f"Render chunk {k} must contain one sample rate; found "
+                    f"{sorted(sample_rates)}"
+                )
+            project.set_info_value("RENDER_SRATE", float(sample_rates.pop()))
             # max_n_inputs = []
             # max_n_outputs = []
             # Create a new track for each audio file
-            for j, (audio_path, FxChain, gain) in enumerate(zip(input_chunk, fx_chunk, gain_chunk)):
+            for j, (audio_path, FxChain, gain) in enumerate(
+                zip(input_chunk, fx_chunk, gain_chunk)
+            ):
                 if audio_path is None:
-                    project.add_track(index = j)  # Add an empty track if no audio file is provided
+                    project.add_track(
+                        index=j
+                    )  # Add an empty track if no audio file is provided
                     # max_n_inputs.append(0)
                     # max_n_outputs.append(0)
                 else:
                     # current_max_n_inputs = 0
                     # current_max_n_outputs = 0
-                    assert os.path.exists(audio_path), f"Audio file {audio_path} does not exist"
-                    add_audio_to_new_track(p0 = audio_path) # mode 1 means insert media to a new track
+                    if not os.path.exists(audio_path):
+                        raise FileNotFoundError(
+                            f"Audio file {audio_path} does not exist"
+                        )
+                    add_audio_to_new_track(
+                        p0=audio_path
+                    )  # mode 1 means insert media to a new track
                     for fx_dict in FxChain:
-                        assert "fx_name" in fx_dict, f"Missing 'fx_name' key in FxChain item: {fx_dict}"
-                        assert "params" in fx_dict, f"Missing 'params' key in FxChain item for fx '{fx_dict.get('fx_name', 'UNKNOWN')}': {fx_dict}"
-                        assert isinstance(fx_dict["params"], list) or isinstance(fx_dict["params"], dict), f"Invalid 'params' type in FxChain item for fx '{fx_dict.get('fx_name', 'UNKNOWN')}': {fx_dict}, should be a list."
+                        if "fx_name" not in fx_dict:
+                            raise ValueError(f"FX-chain item has no fx_name: {fx_dict}")
+                        if "params" not in fx_dict:
+                            raise ValueError(
+                                f"FX {fx_dict['fx_name']} has no params field"
+                            )
+                        if not isinstance(fx_dict["params"], (list, dict)):
+                            raise TypeError(
+                                f"FX {fx_dict['fx_name']} params must be a list or dict"
+                            )
                         fx = project.tracks[j].add_fx(fx_dict["fx_name"])
                         # Set FX parameters
                         if isinstance(fx_dict["params"], list):
                             preset_params = fx_dict["params"]
                         elif isinstance(fx_dict["params"], dict):
                             preset_params = list(fx_dict["params"].values())
-                        assert len(preset_params) == len(fx.params), f"FX {fx_dict['fx_name']} has {len(fx.params)} parameters, but {len(preset_params)} were provided"
-                        interested_params_list = [(i, v) for i, v in enumerate(preset_params) if v is not None] # if v is None meaning that we keep it as default, it will be ignored
+                        if len(preset_params) != len(fx.params):
+                            raise ValueError(
+                                f"FX {fx_dict['fx_name']} has {len(fx.params)} "
+                                f"parameters, but {len(preset_params)} were provided"
+                            )
+                        interested_params_list = [
+                            (i, v) for i, v in enumerate(preset_params) if v is not None
+                        ]  # if v is None meaning that we keep it as default, it will be ignored
                         for param_idx, param_value in interested_params_list:
                             fx.params[param_idx] = param_value
                         # if fx.n_inputs > current_max_n_inputs:
@@ -222,47 +426,118 @@ def batch_render_fx(
                         #     current_max_n_outputs = fx.n_outputs
                     # max_n_inputs.append(current_max_n_inputs)
                     # max_n_outputs.append(current_max_n_outputs)
+                if not isinstance(gain, (int, float)) or not np.isfinite(gain):
+                    raise ValueError(f"Track {j} has invalid gain: {gain}")
                 project.tracks[j].set_info_value("D_VOL", gain)
-            
+
             # Set Track Sends (default number of channels for each track is 2)
             if TrackSend_list is not None:
                 for track_send in track_send_chunks[k]:
                     # If one FxChain has multiple output FxChains and ends with a splitter, it cannot serve as a sidechain input to another track in the same layer;
                     # In our data_class.py, we have ruled out the cases when tracks with splitters to interact with tracks containing sidechain inputs
-                    if fx_chunk[track_send]:
-                        if fx_chunk[track_send][-1].get("fx_type") == "splitter":
-                            n_output_channel = fx_chunk[track_send][-1].get("n_outputs")
-                            project.tracks[track_send].set_info_value("I_NCHAN", n_output_channel)
+                    is_splitter_send = bool(
+                        fx_chunk[track_send]
+                        and fx_chunk[track_send][-1].get("fx_type") == "splitter"
+                    )
+                    if is_splitter_send:
+                        n_output_channel = fx_chunk[track_send][-1].get("n_outputs")
+                        if (
+                            not isinstance(n_output_channel, int)
+                            or n_output_channel < 2
+                        ):
+                            raise ValueError(
+                                f"Splitter track {track_send} has invalid output "
+                                f"channel count: {n_output_channel}"
+                            )
+                        track_channel_count = n_output_channel + n_output_channel % 2
+                        project.tracks[track_send].set_info_value(
+                            "I_NCHAN", track_channel_count
+                        )
                     # Process receive tracks
-                    for i, receive_track_index in enumerate(track_send_chunks[k][track_send]):
-                        sidechain_channel_info = [(fx_setting['n_inputs'], fx_setting['n_outputs']) for fx_setting in fx_chunk[receive_track_index] if fx_setting.get("sidechain_input")]
-                        if len(sidechain_channel_info) > 1:
-                            raise ValueError(f"Only one sidechain input is supported. Found {len(sidechain_channel_info)} sidechain inputs in track {receive_track_index}.")
-                        elif len(sidechain_channel_info) == 1: # currently, only support one sidechain input
-                            # if the receive track has sidechain input, we need to set the input channel
-                            n_input_channel, n_output_channel = sidechain_channel_info[0]
-                            project.tracks[receive_track_index].set_info_value("I_NCHAN", n_input_channel)
-                            source_channel = [1, 2] # default to stereo channels 1+2
-                            receive_channel = list(range(n_output_channel+1, n_input_channel+1))
-                        else: # splitter
-                            source_channel = [2*i+item for item in [1, 2]] # handles mono and stereo with the same logic
+                    for i, receive_track_index in enumerate(
+                        track_send_chunks[k][track_send]
+                    ):
+                        if is_splitter_send:
+                            source_channel = [
+                                2 * i + item for item in [1, 2]
+                            ]  # handles mono and stereo with the same logic
                             receive_channel = [1, 2]
-                        add_send_by_channel(project, track_send, receive_track_index, source_channel, receive_channel)
-            
-            
+                        else:
+                            sidechain_channel_info = [
+                                (fx_setting["n_inputs"], fx_setting["n_outputs"])
+                                for fx_setting in fx_chunk[receive_track_index]
+                                if fx_setting.get("sidechain_input") is not None
+                            ]
+                            if len(sidechain_channel_info) != 1:
+                                raise ValueError(
+                                    "A non-splitter track send must target exactly "
+                                    "one sidechain-enabled effect; found "
+                                    f"{len(sidechain_channel_info)} on track "
+                                    f"{receive_track_index}"
+                                )
+                            n_input_channel, n_output_channel = sidechain_channel_info[
+                                0
+                            ]
+                            if (
+                                not isinstance(n_input_channel, int)
+                                or not isinstance(n_output_channel, int)
+                                or n_input_channel <= n_output_channel
+                            ):
+                                raise ValueError(
+                                    f"Invalid sidechain channel layout on track "
+                                    f"{receive_track_index}: {n_input_channel} inputs, "
+                                    f"{n_output_channel} outputs"
+                                )
+                            track_channel_count = n_input_channel + n_input_channel % 2
+                            project.tracks[receive_track_index].set_info_value(
+                                "I_NCHAN", track_channel_count
+                            )
+                            source_channel = [1, 2]
+                            receive_channel = list(
+                                range(n_output_channel + 1, n_input_channel + 1)
+                            )
+                            if len(receive_channel) > 2:
+                                raise ValueError(
+                                    "WildFX supports at most two sidechain "
+                                    f"channels; track {receive_track_index} needs "
+                                    f"{len(receive_channel)}"
+                                )
+                        add_send_by_channel(
+                            project,
+                            track_send,
+                            receive_track_index,
+                            source_channel,
+                            receive_channel,
+                        )
+
             # Select all tracks
             RPR.Main_OnCommand(40296, 0)
             # Unselect the tracks in tracks_to_unselect (typically the source tracks for splitters)
             if tracks_to_unselect is not None:
                 for track_index in unselect_chunks[k]:
                     project.tracks[track_index].is_selected = False
+            for stale_file in tmp_files_paths + [
+                os.path.join(tmp_output_dir, "tmp_output.wav")
+            ]:
+                if os.path.exists(stale_file):
+                    os.remove(stale_file)
+            project.set_info_value("RENDER_TAILFLAG", 2 if tail_seconds > 0 else 0)
+            project.set_info_value("RENDER_TAILMS", tail_seconds * 1000.0)
             # Render project, using the most recent render settings
             RPR.Main_OnCommand(41824, 0)
             start_time = time.time()
-            num_valid_output = len(output_chunk) - len(unselect_chunks[k]) if tracks_to_unselect is not None else len(output_chunk)
-            files_pending = tmp_files_paths[:num_valid_output] if num_valid_output > 1 else [os.path.join(tmp_output_dir, f'tmp_output.wav')]
-            files_done = files_pending[:] # a deep copy of the list
-            
+            num_valid_output = (
+                len(output_chunk) - len(unselect_chunks[k])
+                if tracks_to_unselect is not None
+                else len(output_chunk)
+            )
+            files_pending = (
+                tmp_files_paths[:num_valid_output]
+                if num_valid_output > 1
+                else [os.path.join(tmp_output_dir, "tmp_output.wav")]
+            )
+            files_done = files_pending[:]  # a deep copy of the list
+
             # Verify all files were created
             while files_pending and (time.time() - start_time < max_wait):
                 # Check which files still need to be created
@@ -272,24 +547,34 @@ def batch_render_fx(
                     time.sleep(0.5)
             if files_pending:
                 missing_files = len(files_pending)
-                raise TimeoutError(f"Render timed out after {max_wait} seconds. {missing_files} files were not created.")
+                raise TimeoutError(
+                    f"Render timed out after {max_wait} seconds. {missing_files} files were not created."
+                )
             else:
                 outer_pbar.set_postfix({"status": f"rendered {num_valid_output} files"})
-            
+
             filtered_output_chunk = [output for output in output_chunk if output]
+            if len(filtered_output_chunk) != len(files_done):
+                raise RuntimeError(
+                    f"REAPER created {len(files_done)} files for "
+                    f"{len(filtered_output_chunk)} requested outputs"
+                )
             # Move rendered files to the specified output directory
             for tmp_output, output_path in zip(files_done, filtered_output_chunk):
                 # Move the rendered file to the output directory
                 os.rename(tmp_output, output_path)
-                            
-            # Clean up by deleting all tracks after rendering       
+
+            # Clean up by deleting all tracks after rendering
             delete_all_tracks()
         # Clean up the temporary directory when done
         if os.path.exists(tmp_output_dir):
             shutil.rmtree(tmp_output_dir)
         outer_pbar.close()
 
-def fx_get_metadata(project: reapy.core.ReapyObject, plugin_name: str, fx_type: str) -> dict:
+
+def fx_get_metadata(
+    project: reapy.core.ReapyObject, plugin_name: str, fx_type: str
+) -> dict:
     """
     Retrieve metadata for a specified plugin in a REAPER project.
     This function adds a temporary track to the project, inserts the specified
@@ -309,86 +594,129 @@ def fx_get_metadata(project: reapy.core.ReapyObject, plugin_name: str, fx_type: 
     with reapy.inside_reaper():
         track = project.add_track()
         fx = track.add_fx(plugin_name)
-            
+
         # get the valid values for each parameter
-        valid_params = fx_get_valid_params(track.id, fx.index)
-        
+        valid_params = fx_get_valid_params(
+            track.id,
+            fx.index,
+            ignored_param_names=READ_ONLY_PARAMS_BY_PLUGIN.get(plugin_name),
+        )
+
         # maps frequencies in Hertz (Hz) to the mel scale, which better represents human auditory perception.
         freq_keywords = [
-            'hz', 'freq', 'crossover', 'frequency','pitch', 'filter', 
-            'cutoff', 'spectral', 'spectrum', 'lowpass', 'highpass', 
-            'bandpass', 'bandstop', 'lowcut', 'highcut'
-            ]
+            "hz",
+            "freq",
+            "crossover",
+            "frequency",
+            "pitch",
+            "filter",
+            "cutoff",
+            "spectral",
+            "spectrum",
+            "lowpass",
+            "highpass",
+            "bandpass",
+            "bandstop",
+            "lowcut",
+            "highcut",
+        ]
         for param_name, param_value in valid_params.items():
-            if any(freq_keyword in param_name.lower() for freq_keyword in freq_keywords):
+            if param_value and any(
+                freq_keyword in param_name.lower() for freq_keyword in freq_keywords
+            ):
                 # Generate perceptually spaced frequencies
-                valid_params[param_name] = generate_perceptual_frequency_list(param_value[0], param_value[-1], len(param_value))
-        
+                valid_params[param_name] = generate_perceptual_frequency_list(
+                    param_value[0], param_value[-1], len(param_value)
+                )
+
         # store plugin details
         metadata = {
             "fx_name": plugin_name,
             "fx_type": fx_type,
             "n_inputs": fx.n_inputs,
             "n_outputs": fx.n_outputs,
-            "valid_params": valid_params
+            "valid_params": valid_params,
         }
-        
+
         # remove the track
         delete_all_tracks()
-    
+
     return metadata
 
-def fx_get_valid_params(track_id: str, fx_index: int, max_grid: int = 100) -> dict:
+
+def fx_get_valid_params(
+    track_id: str,
+    fx_index: int,
+    max_grid: int = 100,
+    ignored_param_names: Optional[Iterable[str]] = None,
+) -> dict:
     """
     Retrieve all valid parameter values for a given FX effect in REAPER.
-    
+
     This function analyzes each parameter in the specified FX effect and determines
     the set of valid values based on the parameter type. Parameters containing names
     from NOT_INTERESTED_PARAMS will have empty value lists.
-    
+
     - For toggle/boolean parameters (is_toggle=True): Returns [min_val, max_val],
       typically [0, 1]
-    - For continuous parameters (step=0) or parameters with too many steps 
+    - For continuous parameters (step=0) or parameters with too many steps
       (steps > max_grid): Returns a list of evenly distributed sample values
       across the parameter's range with max_grid+1 points
     - For discrete parameters with a reasonable number of steps: Returns all valid
       incremental values from min_val to max_val using the specified step size
     - For parameters containing keywords in NOT_INTERESTED_PARAMS: Returns an empty list
-    
+
     Parameters:
         track_id (str): The identifier of the track containing the FX
         fx_index (int): The index of the FX on the track
         max_grid (int, optional): Maximum number of steps to consider for discrete
                                  enumeration before switching to sampling.
                                  Default is 101.
-    
+
     Returns:
         dict: A dictionary where:
               - Keys are parameter names (str)
               - Values are lists of valid normalized parameter values (list[float])
               - Parameters matching NOT_INTERESTED_PARAMS have empty lists
     """
+    ignored_param_names = {name.lower() for name in (ignored_param_names or set())}
     with reapy.inside_reaper():
         # cache API references
         get_num_params = RPR.TrackFX_GetNumParams
         # cache API references and Create partials with correct parameters
-        get_param_name = partial(RPR.TrackFX_GetParamName, p0=track_id, p1=fx_index, p3="", p4=512)
+        get_param_name = partial(
+            RPR.TrackFX_GetParamName, p0=track_id, p1=fx_index, p3="", p4=512
+        )
         get_param = partial(RPR.TrackFX_GetParam, p0=track_id, p1=fx_index, p3=0, p4=0)
-        get_param_step_size = partial(RPR.TrackFX_GetParameterStepSizes, 
-                                     p0=track_id, p1=fx_index, p3=0, p4=0, p5=0, p6=0)
-        
+        get_param_step_size = partial(
+            RPR.TrackFX_GetParameterStepSizes,
+            p0=track_id,
+            p1=fx_index,
+            p3=0,
+            p4=0,
+            p5=0,
+            p6=0,
+        )
+
         n_params = get_num_params(track_id, fx_index)
 
         fx_parameters = {}
         for param_index in range(n_params):
             param_name = get_param_name(p2=param_index)[4]
-            
+
             # Check if this is a not-interested parameter
             param_name_lower = param_name.lower()
-            # The last 3 params of plugins are: Bypass, Wet, Delta. 
+            # The last 3 params of plugins are: Bypass, Wet, Delta.
             # They are all built‑in parameters in REAPER.
             # To Reduce the number of params, we can ignore these.
-            if any(not_interested in param_name_lower for not_interested in NOT_INTERESTED_PARAMS) or n_params-3 <= param_index < n_params:
+            if (
+                param_name_lower in ignored_param_names
+                or any(
+                    not_interested in param_name_lower
+                    for not_interested in NOT_INTERESTED_PARAMS
+                )
+                or n_params - 3 <= param_index < n_params
+            ):
                 # If the parameter name is already in the dictionary, append an underscore
                 # This would happen when parameter names of the plugin have conflict with REAPER built-in parameters
                 if param_name in fx_parameters.keys():
@@ -396,63 +724,70 @@ def fx_get_valid_params(track_id: str, fx_index: int, max_grid: int = 100) -> di
                 # For not-interested parameters, use empty list
                 fx_parameters[param_name] = []
                 continue
-                
+
             min_val, max_val = get_param(p2=param_index)[4:6]
             step, _, _, is_toggle = get_param_step_size(p2=param_index)[4:8]
-            
+
             # Generate valid values based on parameter type
             if is_toggle:
                 # Boolean parameter (toggle)
                 valid_values = [min_val, max_val]
             elif step == 0 or ((max_val - min_val) / step + 1) > max_grid:
                 # Too many steps - provide sampled values
-                valid_values = [min_val + i * (max_val - min_val) / max_grid for i in range(max_grid + 1)]
+                valid_values = [
+                    min_val + i * (max_val - min_val) / max_grid
+                    for i in range(max_grid + 1)
+                ]
             else:
                 # Discrete parameter with reasonable number of steps
                 valid_values = []
                 current = min_val
-                while current < max_val + (step * 0.5):  # Add half step for float precision
+                while current < max_val + (
+                    step * 0.5
+                ):  # Add half step for float precision
                     valid_values.append(current)
                     current += step
-            
+
             fx_parameters[param_name] = valid_values
     return fx_parameters
+
 
 def generate_perceptual_frequency_list(min_freq, max_freq, num_points=100):
     """
     Generate a list of frequencies that are perceptually equally spaced
     using the mel scale.
-    
+
     Args:
         min_freq: Minimum frequency in Hz
         max_freq: Maximum frequency in Hz
         num_points: Number of points to generate (default: 100)
-        
+
     Returns:
         List of frequencies in Hz
     """
     # Convert to mel scale
-    min_mel = 2595 * np.log10(1 + min_freq/700)
-    max_mel = 2595 * np.log10(1 + max_freq/700)
-    
+    min_mel = 2595 * np.log10(1 + min_freq / 700)
+    max_mel = 2595 * np.log10(1 + max_freq / 700)
+
     # Create equally spaced points in mel space
     mel_points = np.linspace(min_mel, max_mel, num_points)
-    
+
     # Convert back to Hz
-    hz_points = 700 * (10**(mel_points/2595) - 1)
-    
+    hz_points = 700 * (10 ** (mel_points / 2595) - 1)
+
     # Ensure exact min and max frequencies are preserved
     hz_points[0] = min_freq
     hz_points[-1] = max_freq
-    
+
     return list(hz_points)
+
 
 def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
     # cache API references and Create partials with correct parameters
-    add_audio_to_new_track = partial(RPR.InsertMedia, p1 = 1)
+    add_audio_to_new_track = partial(RPR.InsertMedia, p1=1)
     # Create a new track for each audio file
     assert os.path.exists(audio_path), f"Audio file {audio_path} does not exist"
-    add_audio_to_new_track(p0 = audio_path) # mode 1 means insert media to a new track
+    add_audio_to_new_track(p0=audio_path)  # mode 1 means insert media to a new track
     for fx_dict in FxChain:
         fx = project.tracks[j].add_fx(fx_dict.fx_name)
         # Set FX parameters
@@ -460,8 +795,12 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
             preset_params = fx_dict.params
         elif isinstance(fx_dict.params, dict):
             preset_params = list(fx_dict.params.values())
-        assert len(preset_params) == len(fx.params), f"FX {fx_dict.fx_name} has {len(fx.params)} parameters, but {len(preset_params)} were provided"
-        interested_params_list = [(i, v) for i, v in enumerate(preset_params) if v is not None] # if v is None meaning that we keep it as default, it will be ignored
+        assert len(preset_params) == len(
+            fx.params
+        ), f"FX {fx_dict.fx_name} has {len(fx.params)} parameters, but {len(preset_params)} were provided"
+        interested_params_list = [
+            (i, v) for i, v in enumerate(preset_params) if v is not None
+        ]  # if v is None meaning that we keep it as default, it will be ignored
         for param_idx, param_value in interested_params_list:
             fx.params[param_idx] = param_value
 
@@ -473,12 +812,12 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
 #     Args:
 #         valid_params (dict): A dictionary where keys are parameter names.
 #     Returns:
-#         int: The count of parameters that do not contain any of the following keywords 
+#         int: The count of parameters that do not contain any of the following keywords
 #         (case-insensitive): 'program', 'sample rate', 'buffer size', 'bypass'.
 #     """
 #     names = valid_params.keys()
-    
-#     return len([name for name in names 
+
+#     return len([name for name in names
 #                 if not any([not_interested_param in name.lower()
 #                             for not_interested_param in NOT_INTERESTED_PARAMS])])
 
@@ -486,7 +825,7 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
 #     # Create Lua script path and output path
 #     temp_dir = tempfile.mkdtemp()
 #     lua_script_path = os.path.join(temp_dir, "list_plugins.lua")
-    
+
 #     # Write Lua script to file
 #     with open(lua_script_path, "w") as f:
 #         f.write(script)
@@ -560,7 +899,7 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
 #             if name:find("VST3i:") or name:find("VSTi:") or identifier:find("VSTi") then
 #                 is_instrument = "yes"
 #             end
-            
+
 #             if name:find("VST3:") or name:find("VST3i:") then
 #                 plugin_type = "vst3"
 #             elseif name:find("VST:") or name:find("VSTi:") or identifier:find(".dll") or identifier:find(".vst") or identifier:find(".so") or identifier:find(".dylib") then
@@ -576,10 +915,10 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
 #             elseif name:find("LV2:") or identifier:find(".lv2") then
 #                 plugin_type = "lv2"
 #             end
-            
+
 #             -- Write to CSV
-#             file:write(count .. "," .. name .. "," .. identifier .. "," .. 
-#                     plugin_type .. "," .. filename .. "," .. 
+#             file:write(count .. "," .. name .. "," .. identifier .. "," ..
+#                     plugin_type .. "," .. filename .. "," ..
 #                     path .. "," .. is_instrument .. "\n")
 #             count = count + 1
 #         end
@@ -596,84 +935,84 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
 # def add_audio_to_track(track_id: str, audio_file_path: str):
 #     """
 #     Add audio from a file to a REAPER track.
-    
+
 #     Args:
 #         project: The REAPER project
 #         track: The target track object
 #         audio_file_path: Path to the audio file to add
-        
+
 #     Returns:
 #         tuple: (item, take) - References to the created media item and take
 #     """
 #     # Create a new media item on the track
 #     item = RPR.AddMediaItemToTrack(track_id)
-    
+
 #     # Add a take to the media item
 #     take = RPR.AddTakeToMediaItem(item)
-    
+
 #     # Create a PCM source from the audio file and set it as the take's source
 #     source = RPR.PCM_Source_CreateFromFile(audio_file_path)
 #     RPR.SetMediaItemTake_Source(take, source)
-    
+
 #     # Get the source length to set the item length
 #     source_length = RPR.GetMediaSourceLength(source, False)[0]
 #     RPR.SetMediaItemLength(item, source_length, False)
-    
+
 #     # Position item at the start of the track
 #     RPR.SetMediaItemPosition(item, 0, False)
-    
+
 #     # Update REAPER UI
 #     RPR.UpdateArrange()
-    
+
 #     return source_length
-    
+
 # def render_audio_with_fx(project_id, output_file_path, start_time=0, end_time=None, **kwargs):
 #     """
 #     Render audio using REAPER's rendering engine and return the audio as numpy array.
-    
+
 #     Args:
 #         project_id: The REAPER project ID
 #         output_file_path: Path where the rendered audio will be saved
 #         start_time: Start time for rendering (default: 0)
 #         end_time: End time for rendering (default: project length)
-    
+
 #     Returns:
 #         numpy.ndarray: Audio data in (channels, samples) format
 #         int: Sample rate
 #     """
 #     with reapy.inside_reaper():
 #         init_change_num = RPR.GetProjectStateChangeCount(project_id)
-        
+
 #         if end_time is None:
 #             # Get project length if end time not specified
 #             end_time = RPR.GetProjectLength(project_id)
-        
+
 #         # Set render bounds
 #         RPR.GetSet_LoopTimeRange2(project_id, True, False, start_time, end_time, False)
-        
+
 #         # Split the output file path into directory and filename
 #         output_dir = os.path.dirname(output_file_path)
 #         output_filename = os.path.basename(output_file_path)
-        
+
 #         # Ensure output directory exists
 #         os.makedirs(output_dir, exist_ok=True)
-        
+
 #         if kwargs.get("sample_rate") is not None:
 #             sample_rate = kwargs["sample_rate"]
 #             # Set sample rate
 #             RPR.GetSetProjectInfo(project_id, "RENDER_SAMPLE_RATE", sample_rate, True)
-        
+
 #         # Set render path
 #         RPR.GetSetProjectInfo_String(project_id, "RENDER_FILE", os.path.abspath(output_dir), True)
 #         RPR.GetSetProjectInfo_String(project_id, "RENDER_PATTERN", output_filename, True)
- 
+
 #         # Configure render settings - 24-bit WAV
 #         RPR.GetSetProjectInfo_String(project_id, "RENDER_FORMAT", "evaw", True)  # WAV format
 #         RPR.GetSetProjectInfo_String(project_id, "RENDER_SETTINGS", "BITD24", True)  # 24-bit depth
-        
+
 #         # Render (execute render command)
 #         RPR.Main_OnCommand(41824, 0)  # File: Render project, using the most recent render settings
-        
+
 #         # Wait for render to complete
 #         max_wait = 30  # Maximum seconds to wait
 #         start_time = time.time()
@@ -681,18 +1020,18 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
 #             time.sleep(0.5)
 #             if time.time() - start_time > max_wait:
 #                 raise TimeoutError(f"Render timed out after {max_wait} seconds")
-    
+
 #     # Read audio using soundfile
 #     audio_output, sample_rate = sf.read(output_file_path, always_2d=True)
 #     # Convert to (channels, samples) format
 #     audio_output = audio_output.T  # Important: transpose to match expected format
-    
+
 #     return audio_output, sample_rate
-    
+
 # def save_fx_chain_with_params(track_id, fx_index, params_dict, output_path):
 #     """
 #     Apply parameter settings to an FX and save it as a REAPER FX Chain file
-    
+
 #     Args:
 #         track_id: REAPER track ID
 #         fx_index: Index of the FX to save
@@ -708,20 +1047,20 @@ def add_track_with_fx(project, audio_path: str, FxChain: list, j: int):
 #             if name == param_name:
 #                 param_index = i
 #                 break
-                
+
 #         if param_index >= 0:
 #             # Set the parameter value
 #             RPR.TrackFX_SetParam(track_id, fx_index, param_index, param_value)
-    
+
 #     # Make sure the FX is visible in chain
 #     RPR.TrackFX_Show(track_id, fx_index, 3)  # 3 = chain
-    
+
 #     # Use REAPER's save FX command
 #     RPR.Main_OnCommand(40755, 0)  # Track: Save FX chain
-    
+
 #     # At this point, REAPER will show a save dialog
 #     # Unfortunately, we can't directly control the save dialog via API
 #     # You'll need to manually save the file when prompted
-    
+
 #     print(f"Please save the FX chain to: {output_path}")
 #     return output_path

@@ -1,5 +1,5 @@
 # Base with Python and audio dependencies
-FROM ubuntu:22.04
+FROM --platform=linux/amd64 ubuntu:22.04
 
 # Let the installation process of jackd automatically select yes, preventing the need for user input
 RUN echo "jackd2 jackd/tweak_rt_limits boolean true" | debconf-set-selections
@@ -14,6 +14,7 @@ RUN dpkg --add-architecture i386 && \
     git \
     tmux \
     sudo \
+    rsync \
     # Core audio libraries
     libasound2 \
     libasound2-plugins \
@@ -54,8 +55,8 @@ RUN mkdir -pm755 /etc/apt/keyrings && \
 # Note that if using vscode, then the UID/GID of the user must match the one used in the host system
 # Or, for all commands related to permission change of the user inside of the container, put them into postCreateCommand or entrypoint.sh
 ARG USERNAME=u1
-ARG USER_UID=1026
-ARG USER_GID=1027
+ARG USER_UID=1000
+ARG USER_GID=1000
 RUN groupadd --gid $USER_GID $USERNAME \
     && useradd --uid $USER_UID --gid $USER_GID -m $USERNAME -s /bin/bash \
 # RUN useradd -m -s /bin/bash $USERNAME \
@@ -70,6 +71,8 @@ RUN groupadd -f -g $AUDIO_GID audio \
 
 # Install Miniconda in u1's home directory
 ARG USER_HOME="/home/u1"
+ENV HOME="${USER_HOME}"
+ENV USER="${USERNAME}"
 ENV CONDA_DIR="${USER_HOME}/miniconda3"
 RUN wget --quiet https://repo.anaconda.com/miniconda/Miniconda3-py311_25.1.1-2-Linux-x86_64.sh -O /tmp/miniconda.sh && \
     mkdir -p ${CONDA_DIR} && \
@@ -83,7 +86,7 @@ ENV PATH="${CONDA_DIR}/bin:${PATH}"
 # Configure Conda environment
 RUN conda init bash && \
     conda config --set auto_activate_base true &&\
-    ${CONDA_DIR}/bin/conda run -n base pip install python-reapy
+    ${CONDA_DIR}/bin/conda run -n base pip install uv python-reapy==0.10.0
 
 # Install yabridge following official recommendations
 RUN mkdir -p ${USER_HOME}/.local/share/yabridge && \
@@ -153,3 +156,4 @@ ENV PATH="${USER_HOME}/reaper/REAPER:${PATH}"
 ENV JACK_NO_AUDIO_RESERVATION="1"
 
 ENTRYPOINT ["/entrypoint.sh"]
+CMD ["sleep", "infinity"]

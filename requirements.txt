@@ -1,9 +1,20 @@
-numpy
-soundfile
-scikit-learn
-tqdm
-pyyaml
-torch
-torchaudio
-h5py
-networkx
+numpy==2.2.6
+soundfile==0.13.1
+scikit-learn==1.6.1
+tqdm==4.67.1
+PyYAML==6.0.2
+h5py==3.13.0
+networkx==3.4.2
+python-reapy==0.10.0
+Pillow==11.3.0
+
+# CPU-only wheels keep the controlled Linux image independent of CUDA drivers.
+torch @ https://download.pytorch.org/whl/cpu/torch-2.6.0%2Bcpu-cp311-cp311-linux_x86_64.whl ; sys_platform == "linux" and platform_machine == "x86_64"
+torchaudio @ https://download.pytorch.org/whl/cpu/torchaudio-2.6.0%2Bcpu-cp311-cp311-linux_x86_64.whl ; sys_platform == "linux" and platform_machine == "x86_64"
+torch==2.6.0 ; sys_platform == "darwin"
+torchaudio==2.6.0 ; sys_platform == "darwin"
+
+pytest==8.3.5
+black==25.1.0
+isort==6.0.1
+ruff==0.11.2

@@ -80,39 +80,30 @@ mkdir -p ~/.vst ~/.vst3 ~/.clap ~/.lv2
 # mkdir -p /usr/local/lib64/vst /usr/local/lib64/vst3 /usr/local/lib64/clap /usr/local/lib64/lv2
 ```
 Those are the locations where you should put the plugins that you want to use to generate the dataset.
+The Dev Container also creates any missing folders as empty mount points; it does
+not install or copy plugins onto the host.
 
-### 1.2. Modify the container config file
-The docker container can be built conveniently using IDEs configurate by `.devcontainer/devcontainer.json`. Here we use *Visual Studio Code* as example (or any other IDE built on Visual Studio Code including Cursor). 
+### 1.2. Container configuration
 
-Below are the arguments in `.devcontainer/devcontainer.json` that specified to user's system.
+Open the repository with the VS Code **Dev Containers** extension. The checked-in configuration uses conservative CPU and memory defaults, JACK's dummy audio device, and read-only plugin mounts, so it works on a headless server without editing machine-specific CPU ranges or dataset paths.
 
-#### 1.2.a. Essential arguments in `.devcontainer/devcontainer.json`
-- `USER_UID`: "1014",  // adjust this to your host's user ID, get by `id -u`
-- `USER_GID`: "1015",  // adjust this to your host's group ID, get by `id -g`
-- `AUDIO_GID`: "29"  // adjust this to your host's audio group ID, get by `getent group audio`
-- `runArgs`: 
-  - `--gpus=all` and `--runtime=nvidia`: if you did not set up the NVIDIA container runtime Toolkit on the host machine, you need to remove them. In fact, you basically don't need them at all in the container if you only need to generate the dataset but not train models inside the container.
-  - `--shm-size` and `--memory`: configured according to the host system's available memory resources.
-  - `--cpuset-cpus=0-<biggest-cpu-id>`: configured according to the host system's available cpu cores. Not recommended to set beyond the result of `nproc`.
-- `mounts`: [
+The image is intentionally `linux/amd64`, matching REAPER, yabridge, and the supplied plugin set. It runs natively on the Linux test PC and through Docker's amd64 emulation on Apple Silicon.
 
-  &emsp;"source=/path/on/host,target=/path/in/container,type=bind,consistency=cached,
+The container copies plugins to its own internal folders while excluding `__MACOSX` archive metadata. This leaves the host folders unchanged and prevents REAPER from reporting the metadata copies as failed plugins. For a dataset, add only the bind mount needed for that run to your local Dev Container override.
 
-  &emsp;...
-  
-  ]
-  
-  mount folder /path/on/host to /path/in/container inside of the container. Usually it could be your dataset folder and the plugin folders we mentioned in 1.1.c..
+The Dev Container automatically updates the internal user's UID/GID to match the host user.
 
 ### 1.3. Build docker container
 The Dockerfile is already provided in `.devcontainer/Dockerfile`. You can conveniently build the container by the *Dev Containers* Plugin in VS Code. Manual building by `docker run`, but not recommended. For manual building, we provide `.devcontainer/entrypoint.sh` to initialize the DAW.
 
 > **Note**: by this step you should successfully get inside the container, so the following steps you should run inside of the container.
 
-### 1.4 Install python dependencies
+### 1.4 Python dependencies
 ```
-pip install -r requirements.txt
+uv pip install --python /home/u1/miniconda3/bin/python -r requirements.txt
 ```
+
+The Dev Container runs this command automatically. PyTorch and torchaudio use pinned CPU-only Linux wheels, so the rendering environment does not depend on an NVIDIA driver.
 
 ## 2. Install Plugins
 ### Install Linux plugins
@@ -140,7 +131,7 @@ yabridgectl sync
 
 
 ## 3. Start DAW (REAPER)
-You can start REAPER and leave it in the background by
+The container entrypoint starts JACK and REAPER, configures reapy once, and leaves REAPER running. To restart it manually, use
 ```
 reaper -nosplash -nonewinst -noactivate &
 ```
@@ -189,13 +180,18 @@ VST3: FlyingDelay (superflyDSP),delay
 #### 4.2.b. Usage Examples
 ```
 # Use a plugin list file
-python gen_presets.py --plugin-list my_plugins.csv
+python gen_presets.py --plugin-list my_plugins.csv --input-audio /path/to/sample.wav
 
 # Process a specific plugin with its type
-python gen_presets.py --plugin-name "VST3: ZamCompX2 (Damien Zammit)" compressor
+python gen_presets.py \
+  --plugin-name "VST3: ZamCompX2 (Damien Zammit)" compressor \
+  --input-audio /path/to/sample.wav
 
 # Use the reduced set with a custom input file
 python gen_presets.py --use-reduced-set --input-audio "/path/to/your/sample.wav"
+
+# Generate deterministic parameter presets without rendering/clustering
+python gen_presets.py --plugin-list my_plugins.csv --no-cluster-validation
 ```
 
 ### 4.3 Define data collecting logic with your own dataset
@@ -243,35 +239,53 @@ options:
 ```
 
 ### 4.5. Render audio with REAPER and save the dataset
-- `save_mode` is a important argument. You can set it to 'human-readable' to get `.wav` audio files and `.yaml` metadata in each project folderl; if you set to 'training-ready', then H5 files and `.gpickle` files for `networkx` graphs would be generated. You can choose both.
-```
-usage: main.py [-h] [--save-mode {training-ready,human-readable}] [--save-compression-rate SAVE_COMPRESSION_RATE] [--metadata-yaml METADATA_YAML] [--output-dir OUTPUT_DIR] [--batch-size BATCH_SIZE]
-               [--project-batch-size PROJECT_BATCH_SIZE] [--start-idx START_IDX] [--end-idx END_IDX] [--filename-offset FILENAME_OFFSET] [--log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}]
 
-ReproFX-Graph - Process audio through FX chains defined in YAML metadata
-
-options:
-  -h, --help            show this help message and exit
-  --save-mode {training-ready,human-readable}
-                        Output format: 'training-ready' (H5/pickle) or 'human-readable' (WAV/YAML) (default: training-ready)
-  --save-compression-rate SAVE_COMPRESSION_RATE
-                        Compression method for H5 files (1-9, higher means more compression) (default: 4)
-  --metadata-yaml METADATA_YAML
-                        Path to the YAML metadata file (default: /workspaces/WildFX/proj_metadata/slakh-test.yaml)
-  --output-dir OUTPUT_DIR
-                        Output directory for processed files (default: /datasets1/wildfx/train)
-  --batch-size BATCH_SIZE
-                        Batch size for rendering (slightly larger than CPU cores) (default: 40)
-  --project-batch-size PROJECT_BATCH_SIZE
-                        Number of projects to process in a batch (default: 512)
-  --start-idx START_IDX
-                        Starting index for processing projects (default: 0)
-  --end-idx END_IDX     Ending index for processing projects (None = process until end) (default: None)
-  --filename-offset FILENAME_OFFSET
-                        Offset to add to project index for final output directory naming (default: 0)
-  --log-level {DEBUG,INFO,WARNING,ERROR,CRITICAL}
-                        Set the logging level (default: INFO)
+`--save-mode human-readable` creates WAV/YAML output, `training-ready` creates H5/pickle output, and `both` creates both. A nonzero exit code means the batch is incomplete; partial batch preparation and missing output files are treated as errors. Delay, echo, and reverb layers receive a three-second render tail by default.
 ```
+python main.py \
+  --metadata-yaml /path/to/metadata.yaml \
+  --output-dir wildfx_output \
+  --save-mode both \
+  --render-tail-seconds 3
+```
+
+## 5. Build the DAFx presentation audio bundle
+
+Inside the Dev Container, one command creates dry stems, the dry mix, three graph definitions, three rendered examples, matching 1920×1080 PNG/editable SVG diagrams, a numbered playback folder, and measured safety checks:
+
+```
+python presentation_demo.py --output-dir dafx_demo
+```
+
+To use your own musical material, place compatible stems in one folder and run:
+
+```
+python presentation_demo.py \
+  --stems-dir /path/to/stems \
+  --output-dir dafx_demo
+```
+
+Presentation stems must be finite, non-silent stereo files with one shared sample rate and peaks at or below 0.98.
+
+The three examples demonstrate increasingly complex multitrack routing:
+
+1. Each stem follows its own instrument-specific FX chain before the final merge.
+2. Drums sidechain the bass while rhythm and music form separately processed submixes.
+3. Nested rhythm/music submixes feed a three-band split, including cross-band sidechain compression, before the final merge.
+
+The final files for the talk are `dafx_demo/dry_stems/`, `dafx_demo/playback/00_dry_mix.wav` through `03_graph_3.wav`, and the matching PNG/SVG files under `dafx_demo/diagrams/`. The diagrams are generated directly from the same `Project` objects used to render the audio, including sidechain routes and non-unity mix gains. Open `dafx_demo/playback/playback_order.m3u8` to play every dry stem, the dry mix, then graphs 1–3 in order. `manifest.json` records sample rate, duration, peak, RMS, spectral centroid, low/mid/high energy share, and each processed file's difference from the dry mix. The command fails and removes its partial demo directory instead of leaving a misleading bundle if any render is missing, silent, non-finite, identical to dry, or above the presentation peak limit.
+
+For metadata/audio preparation without REAPER, add `--prepare-only`.
+
+### Regression checks
+
+Inside the container, run the fast deterministic tests with `pytest`. Before a release or presentation, also run the real REAPER/plugin experiments:
+
+```
+pytest -o addopts='' -m reaper -v
+```
+
+The integration tests render all five curated plugins and independently verify the `sidechain_input: 0` route, including its pre-fader control behavior and absence of control-tone leakage.
 
 
 
@@ -279,7 +293,7 @@ options:
 `DisabledDistAPIWarning: Can't reach distant API. Please start REAPER, or call reapy.config.enable_dist_api() from inside REAPER to enable distant API.
   warnings.warn(errors.DisabledDistAPIWarning())`: sometimes if leaving the container too long, jack service and REAPER would be automatically killed. Restart jack service by
 ```
-jackd -d dummy -r 44100 -p 1024 &
+jackd --no-realtime -d dummy -r 44100 -p 1024 &
 # or if you have audio hardware
 jackd -d alsa -d hw:0 -r 44100 -p 1024 -P &
 ```

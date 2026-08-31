@@ -1,120 +1,156 @@
-#!/bin/bash
+#!/usr/bin/env bash
+set -Eeuo pipefail
 
-# Kill any existing JACK servers
-killall -9 jackd 2> /dev/null
+export DISPLAY="${DISPLAY:-:99}"
+export JACK_NO_AUDIO_RESERVATION=1
+REAPER_LOG=/tmp/wildfx-reaper.log
+REAPY_MARKER=/home/u1/.wildfx-reapy-configured
 
-# Detect if audio hardware exists
-if aplay -l | grep -q 'card'; then
-    echo "Audio hardware detected, using ALSA driver"
-    # Attempt to start JACK with ALSA
-    jackd -d alsa -d hw:0 -r 44100 -p 1024 -P &
-    JACK_PID=$!
-    sleep 0.5
-    
-    # Verify JACK started successfully
-    if ! ps -p $JACK_PID > /dev/null; then
-        echo "ALSA driver failed, falling back to dummy driver"
-        jackd -d dummy -r 44100 -p 1024 &
+copy_plugins() {
+    local plugin_format
+    for plugin_format in .vst3 .vst .clap .lv2; do
+        mkdir -p "/home/u1/${plugin_format}"
+        if [[ -d "/plugins-host/${plugin_format}" ]]; then
+            rsync -a --no-owner --no-group --exclude='__MACOSX/' \
+                --exclude='._*' \
+                "/plugins-host/${plugin_format}/" "/home/u1/${plugin_format}/"
+        fi
+    done
+}
+
+start_reaper() {
+    : >"${REAPER_LOG}"
+    stdbuf -oL -eL reaper -nosplash -nonewinst -noactivate \
+        >"${REAPER_LOG}" 2>&1 &
+    REAPER_PID=$!
+}
+
+wait_for_reaper_process() {
+    local attempt
+    for attempt in $(seq 1 3); do
+        sleep 1
+        if ! kill -0 "${REAPER_PID}" 2>/dev/null; then
+            echo "REAPER exited during startup. Log follows:" >&2
+            sed -n '1,200p' "${REAPER_LOG}" >&2
+            return 1
+        fi
+    done
+    return 0
+}
+
+wait_for_reaper_scan() {
+    local attempt
+    local stable_seconds=0
+    for attempt in $(seq 1 180); do
+        if ! kill -0 "${REAPER_PID}" 2>/dev/null; then
+            echo "REAPER exited while scanning plugins. Log follows:" >&2
+            sed -n '1,200p' "${REAPER_LOG}" >&2
+            return 1
+        fi
+
+        # REAPER launches child processes with -__vst_scan__ while it builds
+        # its plugin cache. Short gaps can occur between plugins, so require a
+        # stable quiet period before editing or using the control interface.
+        if pgrep -f -- '-__vst_scan__' >/dev/null 2>&1; then
+            stable_seconds=0
+        else
+            stable_seconds=$((stable_seconds + 1))
+            if [[ "${stable_seconds}" -ge 5 ]]; then
+                return 0
+            fi
+        fi
+        sleep 1
+    done
+
+    echo "REAPER plugin scanning did not settle within 180 seconds." >&2
+    sed -n '1,200p' "${REAPER_LOG}" >&2
+    return 1
+}
+
+copy_plugins
+
+if ! pgrep -f 'Xvfb :99' >/dev/null 2>&1; then
+    # Docker restart preserves /tmp in the container, including stale X locks.
+    rm -f /tmp/.X99-lock /tmp/.X11-unix/X99
+    Xvfb :99 -screen 0 1280x720x24 >/tmp/wildfx-xvfb.log 2>&1 &
+fi
+xvfb_ready=0
+for attempt in $(seq 1 20); do
+    if [[ -S /tmp/.X11-unix/X99 ]]; then
+        xvfb_ready=1
+        break
     fi
-else
-    echo "No audio hardware detected, using dummy driver"
-    # Start JACK with dummy driver
-    jackd -d dummy -r 44100 -p 1024 &
-fi
-
-# Allow JACK some time to initialize
-sleep 0.5
-
-echo "JACK audio server started."
-echo "-----------------------------------------------"
-
-# Initialize Reaper and ensure it's properly set up
-echo "Starting REAPER initialization..."
-
-# === Launch REAPER and capture its output to a log ===
-LOG_FILE="/tmp/reaper.log"
-
-# Launch the installer with input piping
-stdbuf -oL -eL bash -c "(echo "R"; sleep 0.5; echo "Y") | sh /home/u1/reaper/install-reaper.sh" >"$LOG_FILE" 2>&1 &
-# === Wait for “jack: activated client” to appear in the log ===
-echo "Waiting for REAPER to initialize (max 30s)…"
-found=0
-for i in $(seq 1 30); do
-  # Show current log contents
-  cat "$LOG_FILE"
-  if grep -q 'jack: activated client' "$LOG_FILE"; then
-    found=1
-    echo "Detected 'jack: activated client' after ${i}s"
-    break
-  fi
-  sleep 1
+    sleep 0.25
 done
-if [ "$found" -eq 0 ]; then
-  echo "Timed out waiting for REAPER to initialize, proceeding anyway."
+if [[ "${xvfb_ready}" -ne 1 ]]; then
+    echo "Xvfb did not become ready. Log follows:" >&2
+    sed -n '1,200p' /tmp/wildfx-xvfb.log >&2
+    exit 1
 fi
-echo "REAPER initialization completed successfully!"
-# Remove any old log or flag files
-rm -f "$LOG_FILE"
-
-# Kill REAPER processes and monitor properly
-echo "Killing REAPER processes..."
-rm -f "$LOG_FILE"  # Clear log first
-pkill -f reaper >"$LOG_FILE" 2>&1
-KILL_STATUS=$?
-
-if [ $KILL_STATUS -eq 0 ]; then
-  echo "REAPER processes killed successfully"
-else
-  echo "No REAPER processes found or error during kill (status: $KILL_STATUS)"
+if ! pgrep -x jackd >/dev/null 2>&1; then
+    # Offline rendering does not need realtime scheduling privileges.
+    jackd --no-realtime -d dummy -r 44100 -p 1024 \
+        >/tmp/wildfx-jack.log 2>&1 &
 fi
 
-# Wait for processes to actually terminate
-echo "Waiting for REAPER processes to terminate..."
-for i in $(seq 1 10); do
-  if pgrep -f reaper >/dev/null; then
-    echo "Still waiting for REAPER to terminate ($i/10)..."
+jack_ready=0
+for attempt in $(seq 1 30); do
+    if jack_lsp >/dev/null 2>&1; then
+        jack_ready=1
+        break
+    fi
     sleep 1
-  else
-    echo "All REAPER processes terminated"
-    break
-  fi
 done
-
-# Initialize reapy
-# Start REAPER in the background, redirecting stdout and stderr to the log
-stdbuf -oL -eL reaper -nosplash -nonewinst >"$LOG_FILE" 2>&1 &
-REAPER_PID=$!
-echo "REAPER PID=$REAPER_PID, logging to $LOG_FILE"
-
-# === Wait for “jack: activated client” to appear in the log ===
-echo "Waiting for reapy to initialize (max 30s)…"
-found=0
-for i in $(seq 1 30); do
-  # Show current log contents
-  cat "$LOG_FILE"
-  if grep -q 'jack: activated client' "$LOG_FILE"; then
-    found=1
-    echo "Detected 'jack: activated client' after ${i}s"
-    echo "Configuring reapy…"
-    python -c "import reapy; reapy.configure_reaper()" >/dev/null 2>&1
-    break
-  fi
-  sleep 1
-done
-
-if [ "$found" -eq 0 ]; then
-  echo "Timed out waiting for REAPER start, proceeding anyway."
+if [[ "${jack_ready}" -ne 1 ]]; then
+    echo "JACK did not become ready. Log follows:" >&2
+    sed -n '1,200p' /tmp/wildfx-jack.log >&2
+    exit 1
 fi
 
-# Clean up
-echo "Cleaning up..."
-# Terminate the REAPER process
-pkill -9 $REAPER_PID 2> /dev/null
-# Remove the log file
-rm -f "$LOG_FILE"
+start_reaper
+wait_for_reaper_process
+wait_for_reaper_scan
 
-echo "-----------------------------------------------"
-echo "reapy is now configurated. Starting bash shell."
-echo "Note: Run \"tmux new-session -d -s reaper-session 'reaper -nosplash -nonewinst'\" to start REAPER in a new tmux session in background."
-echo "If reapy cannot connect to REAPER, kill the session with \"tmux kill-session\" and retry."
-bash
+if [[ ! -f "${REAPY_MARKER}" ]]; then
+    configured=0
+    for attempt in $(seq 1 6); do
+        if timeout 10s python -c 'import reapy; reapy.configure_reaper()' \
+            >/tmp/wildfx-reapy-configure.log 2>&1; then
+            configured=1
+            touch "${REAPY_MARKER}"
+            break
+        fi
+        sleep 1
+    done
+    if [[ "${configured}" -ne 1 ]]; then
+        echo "Could not configure reapy. Log follows:" >&2
+        sed -n '1,200p' /tmp/wildfx-reapy-configure.log >&2
+        exit 1
+    fi
+
+    # The first process loaded the pre-configuration state. Restart exactly
+    # that PID so REAPER loads the reapy startup hook.
+    kill "${REAPER_PID}" 2>/dev/null || true
+    wait "${REAPER_PID}" 2>/dev/null || true
+    start_reaper
+    wait_for_reaper_process
+    wait_for_reaper_scan
+fi
+
+connected=0
+for attempt in $(seq 1 30); do
+    if timeout 3s python -c 'import reapy; reapy.Project().id' \
+        >/dev/null 2>&1; then
+        connected=1
+        break
+    fi
+    sleep 1
+done
+if [[ "${connected}" -ne 1 ]]; then
+    echo "REAPER is running, but reapy did not accept a connection." >&2
+    sed -n '1,200p' "${REAPER_LOG}" >&2
+    exit 1
+fi
+
+echo "WildFX ready: JACK, REAPER, and reapy are running."
+exec "$@"
